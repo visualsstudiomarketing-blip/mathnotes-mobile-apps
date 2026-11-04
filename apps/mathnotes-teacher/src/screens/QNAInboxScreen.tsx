@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { MessageSquare, Send, CheckCircle2, User, Sparkles } from 'lucide-react-native';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { NotificationService } from '../shared/services/notificationService';
 
 interface DoubtItem {
   id: number;
@@ -91,7 +91,7 @@ export const QNAInboxScreen: React.FC = () => {
                 </View>
                 <div>
                   <Text style={styles.studentName}>{d.studentName}</Text>
-                  <Text style={styles.courseMeta}>{d.courseTitle} • {d.timeAgo}</Text>
+                  <Text style={styles.courseMeta}>{d.courseTitle} â€¢ {d.timeAgo}</Text>
                 </div>
               </View>
               {d.isReplied ? (
@@ -336,3 +336,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

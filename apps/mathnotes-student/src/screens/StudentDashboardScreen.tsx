@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -19,10 +19,10 @@ import {
   HelpCircle,
   Clock
 } from 'lucide-react-native';
-import { StudentEnrollment, UserProfile } from '../../../../shared/types';
-import { ApiService } from '../../../../shared/services/apiService';
-import { AuthService } from '../../../../shared/services/authService';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { StudentEnrollment, UserProfile } from '../shared/types';
+import { ApiService } from '../shared/services/apiService';
+import { AuthService } from '../shared/services/authService';
+import { NotificationService } from '../shared/services/notificationService';
 
 export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
@@ -114,7 +114,7 @@ export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
 
             <View style={styles.courseProgressFooter}>
               <Text style={styles.footerNote}>{enr.completedLessonsCount} / {enr.course.totalLessons} Lessons</Text>
-              <Text style={styles.resumeText}>Continue Lesson →</Text>
+              <Text style={styles.resumeText}>Continue Lesson â†’</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -374,3 +374,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
 });
+

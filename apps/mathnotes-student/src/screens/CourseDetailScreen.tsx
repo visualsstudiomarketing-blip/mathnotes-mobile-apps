@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -19,8 +19,8 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react-native';
-import { Course, CourseTopic, Lesson } from '../../../../shared/types';
-import { ApiService } from '../../../../shared/services/apiService';
+import { Course, CourseTopic, Lesson } from '../shared/types';
+import { ApiService } from '../shared/services/apiService';
 
 export const CourseDetailScreen: React.FC<{ route: any; navigation: any }> = ({
   route,
@@ -116,7 +116,7 @@ export const CourseDetailScreen: React.FC<{ route: any; navigation: any }> = ({
                   >
                     <View style={{ flex: 1 }}>
                       <Text style={styles.topicTitle}>{topic.title}</Text>
-                      <Text style={styles.topicMeta}>{topic.lessons.length} Lessons • 1 Quiz</Text>
+                      <Text style={styles.topicMeta}>{topic.lessons.length} Lessons â€¢ 1 Quiz</Text>
                     </View>
                     {isExpanded ? (
                       <ChevronUp color="#94A3B8" size={18} />
@@ -154,7 +154,7 @@ export const CourseDetailScreen: React.FC<{ route: any; navigation: any }> = ({
                           <HelpCircle color="#F59E0B" size={16} />
                           <View style={{ flex: 1 }}>
                             <Text style={styles.quizTitle}>Quiz: {quiz.title}</Text>
-                            <Text style={styles.quizMeta}>{quiz.questionsCount} Questions • Checkpoint</Text>
+                            <Text style={styles.quizMeta}>{quiz.questionsCount} Questions â€¢ Checkpoint</Text>
                           </View>
                         </TouchableOpacity>
                       ))}
@@ -171,10 +171,10 @@ export const CourseDetailScreen: React.FC<{ route: any; navigation: any }> = ({
       <View style={styles.ctaBar}>
         <View>
           <Text style={styles.ctaPrice}>
-            {course.isFree || !course.price ? '100% Free' : `₹${course.price}`}
+            {course.isFree || !course.price ? '100% Free' : `â‚¹${course.price}`}
           </Text>
           <Text style={styles.ctaGuarantee}>
-            {course.isFree || !course.price ? 'Full Lifetime Access' : 'Inclusive of 18% GST • 7-Day Guarantee'}
+            {course.isFree || !course.price ? 'Full Lifetime Access' : 'Inclusive of 18% GST â€¢ 7-Day Guarantee'}
           </Text>
         </View>
         <TouchableOpacity
@@ -412,3 +412,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

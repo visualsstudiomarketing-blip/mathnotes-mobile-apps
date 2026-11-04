@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LayoutGrid, Layers, GraduationCap, MessageSquare, User, TrendingUp } from 'lucide-react-native';
@@ -11,7 +11,7 @@ import { TeachersAIScreen } from '../screens/TeachersAIScreen';
 import { QNAInboxScreen } from '../screens/QNAInboxScreen';
 import { TeacherProfileScreen } from '../screens/TeacherProfileScreen';
 import { TeacherLoginScreen } from '../screens/TeacherLoginScreen';
-import { AuthService } from '../../../../shared/services/authService';
+import { AuthService } from '../shared/services/authService';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -123,3 +123,4 @@ export function TeacherNavigator() {
     </Stack.Navigator>
   );
 }
+

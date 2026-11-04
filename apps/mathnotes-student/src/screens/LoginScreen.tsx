@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { Sparkles, ShieldCheck, CheckCircle2 } from 'lucide-react-native';
-import { AuthService } from '../../../../shared/services/authService';
+import { AuthService } from '../shared/services/authService';
 
 export const LoginScreen: React.FC<{ navigation: any; onLoginSuccess?: () => void }> = ({
   navigation,
@@ -54,10 +54,10 @@ export const LoginScreen: React.FC<{ navigation: any; onLoginSuccess?: () => voi
         {/* Logo & Brand */}
         <View style={styles.brandContainer}>
           <View style={styles.logoBadge}>
-            <Text style={styles.logoEmoji}>📐</Text>
+            <Text style={styles.logoEmoji}>ðŸ“</Text>
           </View>
           <Text style={styles.brandTitle}>Mathnotes</Text>
-          <Text style={styles.brandTagline}>Learn • Practice • Understand • Achieve</Text>
+          <Text style={styles.brandTagline}>Learn â€¢ Practice â€¢ Understand â€¢ Achieve</Text>
         </View>
 
         {/* Benefits Card */}
@@ -102,7 +102,7 @@ export const LoginScreen: React.FC<{ navigation: any; onLoginSuccess?: () => voi
 
           <View style={styles.securityNote}>
             <ShieldCheck color="#64748B" size={14} />
-            <Text style={styles.securityText}>Verified Google OAuth • Encrypted Session</Text>
+            <Text style={styles.securityText}>Verified Google OAuth â€¢ Encrypted Session</Text>
           </View>
         </View>
 
@@ -230,3 +230,4 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 });
+

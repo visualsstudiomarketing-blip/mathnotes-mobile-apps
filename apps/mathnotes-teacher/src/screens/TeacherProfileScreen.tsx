@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -17,8 +17,8 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react-native';
-import { AuthService } from '../../../../shared/services/authService';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { AuthService } from '../shared/services/authService';
+import { NotificationService } from '../shared/services/notificationService';
 
 export const TeacherProfileScreen: React.FC = () => {
   const [pushEnabled, setPushEnabled] = useState(true);
@@ -258,3 +258,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

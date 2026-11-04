@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -22,9 +22,9 @@ import {
   Calendar,
   Send
 } from 'lucide-react-native';
-import { Course, TeacherAnalytics } from '../../../../shared/types';
-import { ApiService } from '../../../../shared/services/apiService';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { Course, TeacherAnalytics } from '../shared/types';
+import { ApiService } from '../shared/services/apiService';
+import { NotificationService } from '../shared/services/notificationService';
 
 export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -62,13 +62,13 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
 
     // Send Push Notification to all enrolled students
     NotificationService.getInstance().sendPushNotification({
-      title: `🔴 Live Class Scheduled: ${liveTopic}`,
+      title: `ðŸ”´ Live Class Scheduled: ${liveTopic}`,
       body: `Join Mentor Vikramaditya live on ${liveTime}. Click to add to your calendar!`,
       data: { liveLink }
     });
 
     Alert.alert(
-      'Live Session Broadcasted! 🚀',
+      'Live Session Broadcasted! ðŸš€',
       `Push alert sent to ${analytics.totalStudents} enrolled students for "${liveTopic}" at ${liveTime}.`
     );
   };
@@ -78,7 +78,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
     setShowBroadcastModal(false);
 
     NotificationService.getInstance().sendPushNotification({
-      title: '📢 Announcement from Instructor',
+      title: 'ðŸ“¢ Announcement from Instructor',
       body: broadcastMessage,
       data: { type: 'batch_announcement' }
     });
@@ -95,7 +95,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
       {/* Header Banner */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.welcomeSubtitle}>Educator Portal • Mathnotes India 2026</Text>
+          <Text style={styles.welcomeSubtitle}>Educator Portal â€¢ Mathnotes India 2026</Text>
           <Text style={styles.welcomeTitle}>Welcome back, Mentor</Text>
         </View>
         <TouchableOpacity
@@ -121,7 +121,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
           <View style={[styles.statIconBg, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
             <IndianRupee color="#10B981" size={20} />
           </View>
-          <Text style={styles.statNumber}>₹{(analytics.monthlyRevenue / 1000).toFixed(1)}k</Text>
+          <Text style={styles.statNumber}>â‚¹{(analytics.monthlyRevenue / 1000).toFixed(1)}k</Text>
           <Text style={styles.statLabel}>This Month (Net)</Text>
         </View>
 
@@ -209,7 +209,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
             </View>
             <Text style={styles.courseItemTitle}>{course.title}</Text>
             <View style={styles.courseItemFooter}>
-              <Text style={styles.courseItemMeta}>{course.totalLessons} Lessons • {course.totalQuizzes} Mock CBTs</Text>
+              <Text style={styles.courseItemMeta}>{course.totalLessons} Lessons â€¢ {course.totalQuizzes} Mock CBTs</Text>
               <View style={styles.ratingBadge}>
                 <Star color="#F59E0B" size={13} fill="#F59E0B" />
                 <Text style={styles.ratingText}>{course.rating}</Text>
@@ -221,7 +221,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
 
       {/* Payout & Financials Summary (India Tax Compliant) */}
       <View style={styles.taxCard}>
-        <Text style={styles.taxTitle}>🇮🇳 Indian Taxation & Payout Summary</Text>
+        <Text style={styles.taxTitle}>ðŸ‡®ðŸ‡³ Indian Taxation & Payout Summary</Text>
         <Text style={styles.taxDesc}>
           Compliant with Section 194-O (1% TDS deducted and filed against PAN). Payouts are credited directly to your verified UPI/NEFT account on the 1st of every month.
         </Text>
@@ -601,3 +601,4 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 });
+

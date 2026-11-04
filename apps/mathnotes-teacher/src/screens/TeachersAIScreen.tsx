@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import {
   StyleSheet
 } from 'react-native';
 import { Send, GraduationCap, RefreshCw, Clipboard, FileText, CheckCircle2 } from 'lucide-react-native';
-import { AIAssistantService, BOTS_CONFIG } from '../../../../shared/services/aiAssistantService';
-import { ChatMessage } from '../../../../shared/types';
+import { AIAssistantService, BOTS_CONFIG } from '../shared/services/aiAssistantService';
+import { ChatMessage } from '../shared/types';
 
 export const TeachersAIScreen: React.FC = () => {
   const botConfig = BOTS_CONFIG['mathnotes_teacher_ai'];
@@ -20,7 +20,7 @@ export const TeachersAIScreen: React.FC = () => {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `### Welcome to MathNotes Teachers AI! 🎓\n\nI am your dedicated **Educator Copilot** at Mathnotes.courses.\n\nI can help you:\n- **Draft 60-Minute Active Learning Lesson Plans** with the 4-Pillar framework.\n- **Generate Graded Math Quizzes & JEE/Board Exam Problems** with LaTeX.\n- **Diagnose Student Misconceptions** & structure step-by-step rubrics.\n\nWhat would you like to prepare for your students today?`,
+      content: `### Welcome to MathNotes Teachers AI! ðŸŽ“\n\nI am your dedicated **Educator Copilot** at Mathnotes.courses.\n\nI can help you:\n- **Draft 60-Minute Active Learning Lesson Plans** with the 4-Pillar framework.\n- **Generate Graded Math Quizzes & JEE/Board Exam Problems** with LaTeX.\n- **Diagnose Student Misconceptions** & structure step-by-step rubrics.\n\nWhat would you like to prepare for your students today?`,
       timestamp: new Date().toISOString(),
       suggestedFollowups: botConfig.starters
     }
@@ -73,7 +73,7 @@ export const TeachersAIScreen: React.FC = () => {
       <View style={[styles.messageWrapper, isUser ? styles.userWrapper : styles.assistantWrapper]}>
         {!isUser && (
           <View style={styles.botAvatar}>
-            <Text style={styles.avatarEmoji}>🎓</Text>
+            <Text style={styles.avatarEmoji}>ðŸŽ“</Text>
           </View>
         )}
         <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
@@ -82,7 +82,7 @@ export const TeachersAIScreen: React.FC = () => {
           </Text>
           {item.suggestedFollowups && item.suggestedFollowups.length > 0 && (
             <View style={styles.followupsContainer}>
-              <Text style={styles.followupHeader}>⚡ Quick Copilot Actions:</Text>
+              <Text style={styles.followupHeader}>âš¡ Quick Copilot Actions:</Text>
               {item.suggestedFollowups.map((suggestion, idx) => (
                 <TouchableOpacity
                   key={idx}
@@ -329,3 +329,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#334155',
   },
 });
+

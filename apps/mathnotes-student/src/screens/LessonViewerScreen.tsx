@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -16,8 +16,8 @@ import {
   ArrowLeft,
   FileText
 } from 'lucide-react-native';
-import { Lesson } from '../../../../shared/types';
-import { ApiService } from '../../../../shared/services/apiService';
+import { Lesson } from '../shared/types';
+import { ApiService } from '../shared/services/apiService';
 
 export const LessonViewerScreen: React.FC<{ route: any; navigation: any }> = ({
   route,
@@ -251,3 +251,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

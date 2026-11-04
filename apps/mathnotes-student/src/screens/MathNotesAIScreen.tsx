@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,8 @@ import {
   Alert
 } from 'react-native';
 import { Send, Sparkles, RefreshCw, Camera, Image as ImageIcon } from 'lucide-react-native';
-import { AIAssistantService, BOTS_CONFIG } from '../../../../shared/services/aiAssistantService';
-import { ChatMessage } from '../../../../shared/types';
+import { AIAssistantService, BOTS_CONFIG } from '../shared/services/aiAssistantService';
+import { ChatMessage } from '../shared/types';
 
 export const MathNotesAIScreen: React.FC = () => {
   const botConfig = BOTS_CONFIG['mathnotes_student_ai'];
@@ -21,7 +21,7 @@ export const MathNotesAIScreen: React.FC = () => {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `### Welcome to MathNotes AI! 📐\n\nI am your 24/7 conceptual mathematics mentor, calibrated for **IIT-JEE (Main & Advanced), UPSC CSAT, CBSE Class 12, and AI Mathematics**.\n\nUse the **Camera 📸** below to **Snap & Solve** any math problem, or ask me about proofs, derivations, or exam shortcuts!`,
+      content: `### Welcome to MathNotes AI! ðŸ“\n\nI am your 24/7 conceptual mathematics mentor, calibrated for **IIT-JEE (Main & Advanced), UPSC CSAT, CBSE Class 12, and AI Mathematics**.\n\nUse the **Camera ðŸ“¸** below to **Snap & Solve** any math problem, or ask me about proofs, derivations, or exam shortcuts!`,
       timestamp: new Date().toISOString(),
       suggestedFollowups: botConfig.starters
     }
@@ -66,7 +66,7 @@ export const MathNotesAIScreen: React.FC = () => {
     if (isLoading) return;
 
     Alert.alert(
-      '📸 Snap & Solve (Camera Vision)',
+      'ðŸ“¸ Snap & Solve (Camera Vision)',
       'Choose an option to capture your math textbook problem or handwritten doubt:',
       [
         {
@@ -76,7 +76,7 @@ export const MathNotesAIScreen: React.FC = () => {
             const userPhotoMsg: ChatMessage = {
               id: `usr_cam_${Date.now()}`,
               role: 'user',
-              content: '📸 [Photo Captured: Definite Integral King\'s Property Problem]',
+              content: 'ðŸ“¸ [Photo Captured: Definite Integral King\'s Property Problem]',
               timestamp: new Date().toISOString(),
               imageUri: 'https://mathnotes.courses/wp-content/uploads/sample_integral.png'
             };
@@ -102,7 +102,7 @@ export const MathNotesAIScreen: React.FC = () => {
             const userPhotoMsg: ChatMessage = {
               id: `usr_gal_${Date.now()}`,
               role: 'user',
-              content: '🖼️ [Gallery Upload: JEE Advanced King\'s Property Problem]',
+              content: 'ðŸ–¼ï¸ [Gallery Upload: JEE Advanced King\'s Property Problem]',
               timestamp: new Date().toISOString(),
               imageUri: 'https://mathnotes.courses/wp-content/uploads/sample_integral.png'
             };
@@ -138,7 +138,7 @@ export const MathNotesAIScreen: React.FC = () => {
       <View style={[styles.messageWrapper, isUser ? styles.userWrapper : styles.assistantWrapper]}>
         {!isUser && (
           <View style={styles.botAvatar}>
-            <Text style={styles.avatarEmoji}>📐</Text>
+            <Text style={styles.avatarEmoji}>ðŸ“</Text>
           </View>
         )}
         <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
@@ -155,7 +155,7 @@ export const MathNotesAIScreen: React.FC = () => {
 
           {item.suggestedFollowups && item.suggestedFollowups.length > 0 && (
             <View style={styles.followupsContainer}>
-              <Text style={styles.followupHeader}>💡 Invariant Concept Follow-ups:</Text>
+              <Text style={styles.followupHeader}>ðŸ’¡ Invariant Concept Follow-ups:</Text>
               {item.suggestedFollowups.map((suggestion, idx) => (
                 <TouchableOpacity
                   key={idx}
@@ -226,7 +226,7 @@ export const MathNotesAIScreen: React.FC = () => {
 
         <TextInput
           style={styles.input}
-          placeholder="Ask a doubt or tap 📸 to Snap & Solve..."
+          placeholder="Ask a doubt or tap ðŸ“¸ to Snap & Solve..."
           placeholderTextColor="#64748B"
           value={inputText}
           onChangeText={setInputText}
@@ -437,3 +437,4 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
 });
+

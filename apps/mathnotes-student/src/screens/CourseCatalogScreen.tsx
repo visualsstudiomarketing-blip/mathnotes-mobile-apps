@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { Search, Star, Clock, BookOpen, Filter } from 'lucide-react-native';
-import { Course } from '../../../../shared/types';
-import { ApiService } from '../../../../shared/services/apiService';
+import { Course } from '../shared/types';
+import { ApiService } from '../shared/services/apiService';
 
 const SUBJECTS = ['All', 'Calculus', 'Algebra', 'Coordinate Geometry', 'IIT-JEE'];
 
@@ -251,3 +251,4 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
+

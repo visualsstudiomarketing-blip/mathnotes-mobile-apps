@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Compass, BookOpen, Sparkles, LayoutDashboard } from 'lucide-react-native';
@@ -12,7 +12,7 @@ import { CheckoutScreen } from '../screens/CheckoutScreen';
 import { MathNotesAIScreen } from '../screens/MathNotesAIScreen';
 import { StudentDashboardScreen } from '../screens/StudentDashboardScreen';
 import { LoginScreen } from '../screens/LoginScreen';
-import { AuthService } from '../../../../shared/services/authService';
+import { AuthService } from '../shared/services/authService';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -122,3 +122,4 @@ export function AppNavigator() {
     </Stack.Navigator>
   );
 }
+

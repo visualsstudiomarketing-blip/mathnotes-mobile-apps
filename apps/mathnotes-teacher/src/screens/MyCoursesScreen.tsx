@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,8 @@ import {
   StyleSheet
 } from 'react-native';
 import { Plus, Users, BookOpen, Star, MoreVertical, Edit, FileText } from 'lucide-react-native';
-import { Course } from '../../../../shared/types';
-import { ApiService } from '../../../../shared/services/apiService';
+import { Course } from '../shared/types';
+import { ApiService } from '../shared/services/apiService';
 
 export const MyCoursesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -40,7 +40,7 @@ export const MyCoursesScreen: React.FC<{ navigation: any }> = ({ navigation }) =
           <View key={course.id} style={styles.courseCard}>
             <View style={styles.badgeRow}>
               <Text style={styles.subjectBadge}>{course.subject}</Text>
-              <Text style={styles.activeBadge}>Live • Tutor LMS</Text>
+              <Text style={styles.activeBadge}>Live â€¢ Tutor LMS</Text>
             </View>
 
             <Text style={styles.title}>{course.title}</Text>
@@ -221,3 +221,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

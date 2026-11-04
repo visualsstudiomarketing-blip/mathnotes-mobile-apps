@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   StyleSheet
 } from 'react-native';
 import { Users, Award, TrendingUp, Bell, CheckCircle } from 'lucide-react-native';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { NotificationService } from '../shared/services/notificationService';
 
 export const StudentAnalyticsScreen: React.FC = () => {
   const [students, setStudents] = useState([
@@ -36,7 +36,7 @@ export const StudentAnalyticsScreen: React.FC = () => {
             <View style={styles.cardHeader}>
               <View>
                 <Text style={styles.name}>{s.name}</Text>
-                <Text style={styles.meta}>{s.course} • Active {s.lastActive}</Text>
+                <Text style={styles.meta}>{s.course} â€¢ Active {s.lastActive}</Text>
               </View>
               <View style={styles.scoreBadge}>
                 <Award color="#10B981" size={13} />
@@ -172,3 +172,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

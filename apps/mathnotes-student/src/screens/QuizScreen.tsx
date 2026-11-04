@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -22,8 +22,8 @@ import {
   ChevronLeft,
   AlertTriangle
 } from 'lucide-react-native';
-import { Quiz, QuizQuestion, QuestionStatus } from '../../../../shared/types';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { Quiz, QuizQuestion, QuestionStatus } from '../shared/types';
+import { NotificationService } from '../shared/services/notificationService';
 
 export const QuizScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const { quiz, courseTitle } = route.params || {};
@@ -1024,3 +1024,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+

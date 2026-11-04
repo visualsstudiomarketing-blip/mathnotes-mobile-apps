@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -17,9 +17,9 @@ import {
   Lock,
   ArrowRight
 } from 'lucide-react-native';
-import { Course } from '../../../../shared/types';
-import { paymentService } from '../../../../shared/services/paymentService';
-import { NotificationService } from '../../../../shared/services/notificationService';
+import { Course } from '../shared/types';
+import { paymentService } from '../shared/services/paymentService';
+import { NotificationService } from '../shared/services/notificationService';
 
 export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const { course }: { course: Course } = route.params || {
@@ -64,7 +64,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
         // Push notification alert
         NotificationService.getInstance().sendPushNotification({
           to: 'ExponentPushToken[local_active_student]',
-          title: '🎉 Enrollment Confirmed!',
+          title: 'ðŸŽ‰ Enrollment Confirmed!',
           body: `You are officially enrolled in ${course.title}. Start lesson 1 now!`,
           data: { courseId: course.id }
         });
@@ -94,9 +94,9 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
           <Text style={styles.instructorText}>By {course.instructor.name}</Text>
           <View style={styles.courseMeta}>
             <Text style={styles.metaItem}>{course.totalLessons} Lessons</Text>
-            <Text style={styles.metaDot}>•</Text>
+            <Text style={styles.metaDot}>â€¢</Text>
             <Text style={styles.metaItem}>{course.totalQuizzes} Mock CBTs</Text>
-            <Text style={styles.metaDot}>•</Text>
+            <Text style={styles.metaDot}>â€¢</Text>
             <Text style={styles.metaItem}>Lifetime Access</Text>
           </View>
         </View>
@@ -113,7 +113,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
           </View>
           <View style={styles.methodInfo}>
             <Text style={styles.methodTitle}>UPI (Instant 1-Click Pay)</Text>
-            <Text style={styles.methodDesc}>Google Pay • PhonePe • Paytm • BHIM UPI</Text>
+            <Text style={styles.methodDesc}>Google Pay â€¢ PhonePe â€¢ Paytm â€¢ BHIM UPI</Text>
           </View>
           <View style={[styles.radioCircle, selectedMethod === 'upi' && styles.radioActive]} />
         </TouchableOpacity>
@@ -127,7 +127,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
           </View>
           <View style={styles.methodInfo}>
             <Text style={styles.methodTitle}>Credit / Debit Card</Text>
-            <Text style={styles.methodDesc}>Visa • MasterCard • RuPay • Corporate Cards</Text>
+            <Text style={styles.methodDesc}>Visa â€¢ MasterCard â€¢ RuPay â€¢ Corporate Cards</Text>
           </View>
           <View style={[styles.radioCircle, selectedMethod === 'card' && styles.radioActive]} />
         </TouchableOpacity>
@@ -141,7 +141,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
           </View>
           <View style={styles.methodInfo}>
             <Text style={styles.methodTitle}>Net Banking</Text>
-            <Text style={styles.methodDesc}>SBI • HDFC • ICICI • Axis • 50+ Indian Banks</Text>
+            <Text style={styles.methodDesc}>SBI â€¢ HDFC â€¢ ICICI â€¢ Axis â€¢ 50+ Indian Banks</Text>
           </View>
           <View style={[styles.radioCircle, selectedMethod === 'netbanking' && styles.radioActive]} />
         </TouchableOpacity>
@@ -151,20 +151,20 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
           <Text style={styles.pricingTitle}>Price Breakdown</Text>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Course Base Tuition</Text>
-            <Text style={styles.priceValue}>₹{basePrice}</Text>
+            <Text style={styles.priceValue}>â‚¹{basePrice}</Text>
           </View>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Mathnotes Early-Bird Scholarship</Text>
-            <Text style={[styles.priceValue, styles.greenText]}>-₹{discount}</Text>
+            <Text style={[styles.priceValue, styles.greenText]}>-â‚¹{discount}</Text>
           </View>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Govt. GST (18%)</Text>
-            <Text style={styles.priceValue}>₹{gstAmount}</Text>
+            <Text style={styles.priceValue}>â‚¹{gstAmount}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.priceRow}>
             <Text style={styles.totalLabel}>Total Payable</Text>
-            <Text style={styles.totalValue}>₹{totalAmount}</Text>
+            <Text style={styles.totalValue}>â‚¹{totalAmount}</Text>
           </View>
         </View>
 
@@ -172,7 +172,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
         <View style={styles.trustBanner}>
           <ShieldCheck color="#10B981" size={18} />
           <Text style={styles.trustText}>
-            256-bit SSL Encrypted • Razorpay Secured • 7-Day Money-Back Guarantee
+            256-bit SSL Encrypted â€¢ Razorpay Secured â€¢ 7-Day Money-Back Guarantee
           </Text>
         </View>
       </ScrollView>
@@ -181,7 +181,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
       <View style={styles.footer}>
         <View>
           <Text style={styles.footerSubText}>Total to Pay</Text>
-          <Text style={styles.footerPrice}>₹{totalAmount}</Text>
+          <Text style={styles.footerPrice}>â‚¹{totalAmount}</Text>
         </View>
         <TouchableOpacity
           style={[styles.payButton, isProcessing && styles.payButtonDisabled]}
@@ -204,7 +204,7 @@ export const CheckoutScreen: React.FC<{ route: any; navigation: any }> = ({ rout
         <View style={styles.successOverlay}>
           <View style={styles.successModal}>
             <CheckCircle2 color="#10B981" size={56} />
-            <Text style={styles.successTitle}>Payment Successful! 🎉</Text>
+            <Text style={styles.successTitle}>Payment Successful! ðŸŽ‰</Text>
             <Text style={styles.successSub}>
               You have unlocked lifetime access to {course.title}.
             </Text>
@@ -487,3 +487,4 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 });
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { GraduationCap, ShieldCheck, CheckCircle2, Award } from 'lucide-react-native';
-import { AuthService } from '../../../../shared/services/authService';
+import { AuthService } from '../shared/services/authService';
 
 export const TeacherLoginScreen: React.FC<{ navigation: any; onLoginSuccess?: () => void }> = ({
   navigation,
@@ -52,10 +52,10 @@ export const TeacherLoginScreen: React.FC<{ navigation: any; onLoginSuccess?: ()
         {/* Logo & Brand */}
         <View style={styles.brandContainer}>
           <View style={styles.logoBadge}>
-            <Text style={styles.logoEmoji}>🎓</Text>
+            <Text style={styles.logoEmoji}>ðŸŽ“</Text>
           </View>
           <Text style={styles.brandTitle}>Mathnotes Teacher</Text>
-          <Text style={styles.brandTagline}>Empowering Educators • Scaling Reach</Text>
+          <Text style={styles.brandTagline}>Empowering Educators â€¢ Scaling Reach</Text>
         </View>
 
         {/* Benefits Card */}
@@ -100,7 +100,7 @@ export const TeacherLoginScreen: React.FC<{ navigation: any; onLoginSuccess?: ()
 
           <View style={styles.securityNote}>
             <ShieldCheck color="#64748B" size={14} />
-            <Text style={styles.securityText}>Instructor Verification • Encrypted OAuth</Text>
+            <Text style={styles.securityText}>Instructor Verification â€¢ Encrypted OAuth</Text>
           </View>
         </View>
 
@@ -228,3 +228,4 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 });
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { BookOpen, Sparkles, Award, ArrowRight, Star, Clock } from 'lucide-react-native';
-import { ApiService } from '../../../../shared/services/apiService';
-import { Course } from '../../../../shared/types';
+import { ApiService } from '../shared/services/apiService';
+import { Course } from '../shared/types';
 
 export const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -300,3 +300,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
