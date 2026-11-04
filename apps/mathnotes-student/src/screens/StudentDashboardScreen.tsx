@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Switch,
   Image,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import {
   Award,
@@ -17,12 +17,13 @@ import {
   ChevronRight,
   Sparkles,
   HelpCircle,
-  Clock
+  Clock,
 } from 'lucide-react-native';
 import { StudentEnrollment, UserProfile } from '../shared/types';
 import { ApiService } from '../shared/services/apiService';
 import { AuthService } from '../shared/services/authService';
 import { NotificationService } from '../shared/services/notificationService';
+import { AuroraBackground, GlassCard, LiquidGlassTokens } from '../shared/components/glass';
 
 export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
@@ -52,145 +53,178 @@ export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Profile Header */}
-      <View style={styles.profileCard}>
-        <View style={styles.avatarContainer}>
-          <Image
-            source={{ uri: user?.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80' }}
-            style={styles.avatar}
-          />
-          <View style={styles.badgeOnline} />
-        </View>
-        <View style={styles.profileText}>
-          <Text style={styles.name}>{user?.name || 'Vikram'}</Text>
-          <Text style={styles.email}>{user?.email || 'student@mathnotes.courses'}</Text>
-          <View style={styles.oauthBadge}>
-            <ShieldCheck color="#10B981" size={13} />
-            <Text style={styles.oauthText}>Google OAuth Verified</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Learning Analytics Overview */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Learning Analytics</Text>
-        <View style={styles.statsRow}>
-          <View style={styles.statBox}>
-            <BookOpen color="#38BDF8" size={20} />
-            <Text style={styles.statNum}>{enrollments.length}</Text>
-            <Text style={styles.statLabel}>Enrolled Courses</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Award color="#10B981" size={20} />
-            <Text style={styles.statNum}>12</Text>
-            <Text style={styles.statLabel}>Lessons Done</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Clock color="#F59E0B" size={20} />
-            <Text style={styles.statNum}>8.5h</Text>
-            <Text style={styles.statLabel}>Time Spent</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Enrolled Courses & Progress */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Active Courses Progress</Text>
-        {enrollments.map(enr => (
-          <TouchableOpacity
-            key={enr.id}
-            style={styles.courseProgressCard}
-            onPress={() => navigation.navigate('CourseDetail', { courseId: enr.courseId })}
-          >
-            <View style={styles.courseProgressHeader}>
-              <Text style={styles.courseName}>{enr.course.title}</Text>
-              <Text style={styles.progressPercent}>{enr.progressPercent}%</Text>
+    <AuroraBackground variant="student">
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Profile Liquid Glass Header */}
+        <GlassCard
+          glowColor={LiquidGlassTokens.colors.accentCyan}
+          glowPosition="top-right"
+          style={styles.profileGlass}
+        >
+          <View style={styles.profileRow}>
+            <View style={styles.avatarContainer}>
+              <Image
+                source={{
+                  uri:
+                    user?.avatarUrl ||
+                    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+                }}
+                style={styles.avatar}
+              />
+              <View style={styles.badgeOnline} />
             </View>
-
-            <View style={styles.progressBarBg}>
-              <View style={[styles.progressBarFill, { width: `${enr.progressPercent}%` }]} />
-            </View>
-
-            <View style={styles.courseProgressFooter}>
-              <Text style={styles.footerNote}>{enr.completedLessonsCount} / {enr.course.totalLessons} Lessons</Text>
-              <Text style={styles.resumeText}>Continue Lesson →</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* Preferences & Settings */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Preferences</Text>
-        <View style={styles.settingsCard}>
-          <View style={styles.settingItem}>
-            <View style={styles.settingIconText}>
-              <Bell color="#38BDF8" size={18} />
-              <View>
-                <Text style={styles.settingLabel}>Expo Push Notifications</Text>
-                <Text style={styles.settingDesc}>Quiz deadlines and mentor replies</Text>
+            <View style={styles.profileText}>
+              <Text style={styles.name}>{user?.name || 'Vikram'}</Text>
+              <Text style={styles.email}>{user?.email || 'student@mathnotes.courses'}</Text>
+              <View style={styles.oauthBadge}>
+                <ShieldCheck color="#10B981" size={13} />
+                <Text style={styles.oauthText}>Google OAuth Verified</Text>
               </View>
             </View>
-            <Switch
-              value={pushEnabled}
-              onValueChange={handleToggleNotifications}
-              trackColor={{ false: '#334155', true: '#2563EB' }}
-              thumbColor={pushEnabled ? '#38BDF8' : '#94A3B8'}
-            />
           </View>
+        </GlassCard>
 
-          <TouchableOpacity
-            style={styles.settingItem}
-            onPress={() => navigation.navigate('MathNotesAI')}
-          >
-            <View style={styles.settingIconText}>
-              <Sparkles color="#A855F7" size={18} />
-              <View>
-                <Text style={styles.settingLabel}>MathNotes AI Chat History</Text>
-                <Text style={styles.settingDesc}>Review past doubts & proofs</Text>
-              </View>
-            </View>
-            <ChevronRight color="#64748B" size={18} />
-          </TouchableOpacity>
+        {/* Learning Analytics Overview */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Learning Analytics</Text>
+          <View style={styles.statsRow}>
+            <GlassCard
+              style={styles.statBox}
+              contentStyle={styles.statContent}
+              glowColor="rgba(56, 189, 248, 0.2)"
+            >
+              <BookOpen color="#38BDF8" size={20} />
+              <Text style={styles.statNum}>{enrollments.length}</Text>
+              <Text style={styles.statLabel}>Enrolled Courses</Text>
+            </GlassCard>
+
+            <GlassCard
+              style={styles.statBox}
+              contentStyle={styles.statContent}
+              glowColor="rgba(16, 185, 129, 0.2)"
+            >
+              <Award color="#10B981" size={20} />
+              <Text style={styles.statNum}>12</Text>
+              <Text style={styles.statLabel}>Lessons Done</Text>
+            </GlassCard>
+
+            <GlassCard
+              style={styles.statBox}
+              contentStyle={styles.statContent}
+              glowColor="rgba(245, 158, 11, 0.2)"
+            >
+              <Clock color="#F59E0B" size={20} />
+              <Text style={styles.statNum}>8.5h</Text>
+              <Text style={styles.statLabel}>Time Spent</Text>
+            </GlassCard>
+          </View>
         </View>
-      </View>
 
-      {/* Sign Out */}
-      <View style={styles.logoutSection}>
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleSignOut}>
-          <LogOut color="#EF4444" size={18} />
-          <Text style={styles.logoutText}>Sign Out from Mathnotes</Text>
-        </TouchableOpacity>
-        <Text style={styles.supportNote}>Support: care@mathnotes.courses</Text>
-      </View>
-    </ScrollView>
+        {/* Enrolled Courses & Progress */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Active Courses Progress</Text>
+          {enrollments.map(enr => (
+            <GlassCard
+              key={enr.id}
+              onPress={() => navigation.navigate('CourseDetail', { courseId: enr.courseId })}
+              style={styles.courseProgressGlass}
+              glowColor="rgba(56, 189, 248, 0.25)"
+            >
+              <View style={styles.courseProgressHeader}>
+                <Text style={styles.courseName}>{enr.course.title}</Text>
+                <Text style={styles.progressPercent}>{enr.progressPercent}%</Text>
+              </View>
+
+              <View style={styles.progressBarBg}>
+                <View style={[styles.progressBarFill, { width: `${enr.progressPercent}%` }]} />
+              </View>
+
+              <View style={styles.courseProgressFooter}>
+                <Text style={styles.footerNote}>
+                  {enr.completedLessonsCount} / {enr.course.totalLessons} Lessons
+                </Text>
+                <Text style={styles.resumeText}>Continue Lesson →</Text>
+              </View>
+            </GlassCard>
+          ))}
+        </View>
+
+        {/* Preferences & Settings */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Preferences</Text>
+          <GlassCard style={styles.settingsGlass} contentStyle={{ padding: 0 }}>
+            <View style={styles.settingItem}>
+              <View style={styles.settingIconText}>
+                <Bell color="#38BDF8" size={18} />
+                <View>
+                  <Text style={styles.settingLabel}>Expo Push Notifications</Text>
+                  <Text style={styles.settingDesc}>Quiz deadlines and mentor replies</Text>
+                </View>
+              </View>
+              <Switch
+                value={pushEnabled}
+                onValueChange={handleToggleNotifications}
+                trackColor={{ false: '#334155', true: '#2563EB' }}
+                thumbColor={pushEnabled ? '#38BDF8' : '#94A3B8'}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => navigation.navigate('MathNotesAI')}
+            >
+              <View style={styles.settingIconText}>
+                <Sparkles color="#A855F7" size={18} />
+                <View>
+                  <Text style={styles.settingLabel}>MathNotes AI Chat History</Text>
+                  <Text style={styles.settingDesc}>Review past doubts & proofs</Text>
+                </View>
+              </View>
+              <ChevronRight color="#64748B" size={18} />
+            </TouchableOpacity>
+          </GlassCard>
+        </View>
+
+        {/* Sign Out */}
+        <View style={styles.logoutSection}>
+          <TouchableOpacity style={styles.logoutBtn} onPress={handleSignOut} activeOpacity={0.8}>
+            <LogOut color="#EF4444" size={18} />
+            <Text style={styles.logoutText}>Sign Out from Mathnotes</Text>
+          </TouchableOpacity>
+          <Text style={styles.supportNote}>Support: care@mathnotes.courses</Text>
+        </View>
+      </ScrollView>
+    </AuroraBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
   },
-  profileCard: {
+  scrollContent: {
+    paddingBottom: 110,
+  },
+  profileGlass: {
+    margin: 16,
+    marginTop: 12,
+  },
+  profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#1E293B',
-    margin: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#334155',
     gap: 16,
   },
   avatarContainer: {
     position: 'relative',
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 62,
+    height: 62,
+    borderRadius: 31,
     borderWidth: 2,
     borderColor: '#38BDF8',
   },
@@ -203,7 +237,7 @@ const styles = StyleSheet.create({
     bottom: 2,
     right: 2,
     borderWidth: 2,
-    borderColor: '#1E293B',
+    borderColor: '#0F172A',
   },
   profileText: {
     flex: 1,
@@ -221,66 +255,61 @@ const styles = StyleSheet.create({
   oauthBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 5,
     marginTop: 6,
   },
   oauthText: {
     color: '#10B981',
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   section: {
     paddingHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 22,
   },
   sectionTitle: {
     color: '#F8FAFC',
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '800',
     marginBottom: 10,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
   },
   statBox: {
     flex: 1,
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#334155',
+  },
+  statContent: {
     alignItems: 'center',
+    padding: 14,
     gap: 4,
   },
   statNum: {
     color: '#F8FAFC',
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '900',
   },
   statLabel: {
     color: '#94A3B8',
-    fontSize: 11,
+    fontSize: 10.5,
+    fontWeight: '600',
+    textAlign: 'center',
   },
-  courseProgressCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
-    marginBottom: 10,
-    gap: 8,
+  courseProgressGlass: {
+    marginBottom: 12,
   },
   courseProgressHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 8,
   },
   courseName: {
     color: '#F8FAFC',
-    fontSize: 14,
+    fontSize: 14.5,
     fontWeight: '700',
     flex: 1,
     marginRight: 8,
@@ -292,9 +321,10 @@ const styles = StyleSheet.create({
   },
   progressBarBg: {
     height: 6,
-    backgroundColor: '#0F172A',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: 3,
     overflow: 'hidden',
+    marginVertical: 4,
   },
   progressBarFill: {
     height: '100%',
@@ -305,7 +335,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 2,
+    marginTop: 6,
   },
   footerNote: {
     color: '#94A3B8',
@@ -314,14 +344,10 @@ const styles = StyleSheet.create({
   resumeText: {
     color: '#38BDF8',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
   },
-  settingsCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
-    overflow: 'hidden',
+  settingsGlass: {
+    borderRadius: LiquidGlassTokens.radius.lg,
   },
   settingItem: {
     flexDirection: 'row',
@@ -329,7 +355,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#0F172A',
+    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
   },
   settingIconText: {
     flexDirection: 'row',
@@ -348,7 +374,7 @@ const styles = StyleSheet.create({
   },
   logoutSection: {
     paddingHorizontal: 16,
-    paddingBottom: 40,
+    paddingBottom: 24,
     alignItems: 'center',
     gap: 12,
   },
@@ -356,11 +382,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
+    borderColor: 'rgba(239, 68, 68, 0.35)',
     borderRadius: 14,
-    paddingVertical: 12,
+    paddingVertical: 13,
     width: '100%',
     gap: 8,
   },
@@ -374,4 +400,3 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
 });
-

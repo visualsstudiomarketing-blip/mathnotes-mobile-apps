@@ -27,6 +27,35 @@
     .animate-slide-down {
       animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    /* Liquid Glass UI Tokens */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+    }
+    .floating-glass-dock {
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-top: 1px solid rgba(255, 255, 255, 0.32);
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.7);
+      border-radius: 9999px;
+    }
+    .aurora-student-bg {
+      background: radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.18), transparent 45%),
+                  radial-gradient(circle at 15% 85%, rgba(37, 99, 235, 0.15), transparent 45%),
+                  #07090e;
+    }
+    .aurora-teacher-bg {
+      background: radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.22), transparent 45%),
+                  radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.16), transparent 45%),
+                  #07090e;
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-sky-500 selection:text-white">
@@ -532,28 +561,102 @@
 
     // --- STUDENT SCREENS ---
     function renderStudentScreen(container, nav) {
+      container.className = "flex-1 overflow-y-auto aurora-student-bg flex flex-col relative pb-20";
+      nav.className = "floating-glass-dock mx-4 mb-3 p-1.5 flex items-center justify-around z-40 shrink-0";
       nav.innerHTML = `
-        <button onclick="setTab('home')" class="flex flex-col items-center gap-1 ${currentTab === 'home' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
-          <i data-lucide="compass" class="w-5 h-5"></i>
-          <span class="text-[10px]">Learn</span>
+        <button onclick="setTab('home')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'home' ? 'text-sky-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="compass" class="w-4 h-4"></i>
+          <span class="text-[9px]">Learn</span>
         </button>
-        <button onclick="setTab('courses')" class="flex flex-col items-center gap-1 ${currentTab === 'courses' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
-          <i data-lucide="book-open" class="w-5 h-5"></i>
-          <span class="text-[10px]">Courses</span>
+        <button onclick="setTab('courses')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'courses' ? 'text-sky-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span class="text-[9px]">Courses</span>
         </button>
-        <button onclick="setTab('ai')" class="flex flex-col items-center gap-1 relative ${currentTab === 'ai' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
-          <div class="w-8 h-8 -mt-4 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-500/40">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
-          </div>
-          <span class="text-[10px] mt-0.5">MathNotes AI</span>
+        <button onclick="setTab('lens')" class="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-xl ${currentTab === 'lens' ? 'bg-sky-500/20 text-sky-300 font-bold border border-sky-400/40' : 'text-slate-400'}">
+          <i data-lucide="camera" class="w-4 h-4"></i>
+          <span class="text-[9px]">AI Lens</span>
         </button>
-        <button onclick="setTab('dashboard')" class="flex flex-col items-center gap-1 ${currentTab === 'dashboard' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
-          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-          <span class="text-[10px]">Dashboard</span>
+        <button onclick="setTab('ai')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'ai' ? 'text-sky-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span class="text-[9px]">Mentor</span>
+        </button>
+        <button onclick="setTab('dashboard')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'dashboard' ? 'text-sky-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span class="text-[9px]">Profile</span>
         </button>
       `;
 
-      if (currentTab === 'home') {
+      if (currentTab === 'lens') {
+        container.innerHTML = `
+          <div class="p-4 space-y-4">
+            <div class="flex items-center justify-between pt-1">
+              <div>
+                <span class="text-[10px] bg-sky-500/20 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-full font-bold">
+                  AI VISION MATH LENS 2.0
+                </span>
+                <h2 class="text-base font-extrabold text-white mt-1">Handwritten Math Solver</h2>
+              </div>
+              <span class="text-xs text-sky-400 font-bold">IIT-JEE Tier</span>
+            </div>
+
+            <!-- Viewfinder Glass Card -->
+            <div class="glass-card p-4 space-y-3">
+              <div class="relative h-40 rounded-xl overflow-hidden bg-slate-900 border border-slate-700/60 flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover" />
+                <div class="absolute top-2 right-2 bg-emerald-950/80 border border-emerald-500/40 px-2 py-1 rounded-lg flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold">
+                  <i data-lucide="check-circle" class="w-3 h-3"></i> OCR LaTeX Extracted
+                </div>
+              </div>
+
+              <div class="bg-slate-950/90 border border-slate-800 p-2.5 rounded-xl text-center">
+                <p class="text-[11px] text-slate-400 mb-1">Detected Handwritten Formulation:</p>
+                <div class="text-xs font-bold text-sky-300">
+                  $$\\int_{0}^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)}\\,dx$$
+                </div>
+              </div>
+            </div>
+
+            <!-- Socratic Derivation Steps -->
+            <div class="space-y-2.5">
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-400"></i>
+                Socratic Step Derivation
+              </h4>
+
+              <div class="glass-card p-3 space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] bg-sky-500/20 text-sky-400 px-1.5 py-0.5 rounded font-bold">Step 1</span>
+                  <span class="text-xs font-bold text-white">Apply King's Property $x \\to a+b-x$</span>
+                </div>
+                <div class="text-[11px] text-sky-300 py-1">
+                  $$I = \\int_{0}^{\\pi/2} \\frac{\\cos^3(x)}{\\cos^3(x) + \\sin^3(x)}\\,dx$$
+                </div>
+                <p class="text-[10px] text-slate-400 leading-tight">Using $\\sin(\\pi/2 - x) = \\cos(x)$.</p>
+              </div>
+
+              <div class="glass-card p-3 space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] bg-sky-500/20 text-sky-400 px-1.5 py-0.5 rounded font-bold">Step 2</span>
+                  <span class="text-xs font-bold text-white">Sum Identical Denominators</span>
+                </div>
+                <div class="text-[11px] text-sky-300 py-1">
+                  $$2I = \\int_{0}^{\\pi/2} 1\\,dx = \\frac{\\pi}{2} \\implies I = \\frac{\\pi}{4}$$
+                </div>
+                <p class="text-[10px] text-slate-400 leading-tight">Dividing both sides by 2 yields $I = \\pi/4$.</p>
+              </div>
+
+              <!-- Caution Card -->
+              <div class="bg-amber-950/20 border border-amber-600/30 rounded-xl p-3 text-[11px] space-y-1 text-slate-300">
+                <span class="text-amber-400 font-bold flex items-center gap-1">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                  Common Student Pitfall:
+                </span>
+                <p class="text-[10px]">Do not forget to divide by 2! Many students answer $\pi/2$ instead of $\pi/4$.</p>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentTab === 'home') {
         container.innerHTML = `
           <div class="p-4 space-y-4">
             <div class="flex items-center justify-between pt-1">
@@ -674,28 +777,112 @@
 
     // --- TEACHER SCREENS ---
     function renderTeacherScreen(container, nav) {
+      container.className = "flex-1 overflow-y-auto aurora-teacher-bg flex flex-col relative pb-20";
+      nav.className = "floating-glass-dock mx-4 mb-3 p-1.5 flex items-center justify-around z-40 shrink-0";
       nav.innerHTML = `
-        <button onclick="setTab('dashboard')" class="flex flex-col items-center gap-1 ${currentTab === 'dashboard' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
-          <i data-lucide="layout-grid" class="w-5 h-5"></i>
-          <span class="text-[10px]">Dashboard</span>
+        <button onclick="setTab('dashboard')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'dashboard' ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span class="text-[9px]">Dashboard</span>
         </button>
-        <button onclick="setTab('courses')" class="flex flex-col items-center gap-1 ${currentTab === 'courses' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
-          <i data-lucide="layers" class="w-5 h-5"></i>
-          <span class="text-[10px]">My Courses</span>
+        <button onclick="setTab('courses')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'courses' ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span class="text-[9px]">Courses</span>
         </button>
-        <button onclick="setTab('ai')" class="flex flex-col items-center gap-1 relative ${currentTab === 'ai' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
-          <div class="w-8 h-8 -mt-4 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/40">
-            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
-          </div>
-          <span class="text-[10px] mt-0.5">Teachers AI</span>
+        <button onclick="setTab('exam-studio')" class="flex flex-col items-center gap-0.5 px-2.5 py-1 rounded-xl ${currentTab === 'exam-studio' ? 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-400/40' : 'text-slate-400'}">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          <span class="text-[9px]">CBT Studio</span>
         </button>
-        <button onclick="setTab('qna')" class="flex flex-col items-center gap-1 ${currentTab === 'qna' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
-          <i data-lucide="message-square" class="w-5 h-5"></i>
-          <span class="text-[10px]">Q&A Inbox</span>
+        <button onclick="setTab('ai')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'ai' ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+          <span class="text-[9px]">AI Copilot</span>
+        </button>
+        <button onclick="setTab('qna')" class="flex flex-col items-center gap-0.5 px-2 py-1 ${currentTab === 'qna' ? 'text-emerald-400 font-bold' : 'text-slate-400'}">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          <span class="text-[9px]">Q&A</span>
         </button>
       `;
 
-      if (currentTab === 'dashboard') {
+      if (currentTab === 'exam-studio') {
+        container.innerHTML = `
+          <div class="p-4 space-y-4">
+            <div class="flex items-center justify-between pt-1">
+              <div>
+                <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">
+                  TEACHERS AI CBT STUDIO
+                </span>
+                <h2 class="text-base font-extrabold text-white mt-1">AI Exam & Question Paper Studio</h2>
+              </div>
+              <button onclick="alert('Published to Tutor LMS! Test is now live for student enrollments.')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-2.5 py-1 rounded-xl shadow">
+                Publish Live
+              </button>
+            </div>
+
+            <!-- Configuration Glass Card -->
+            <div class="glass-card p-4 space-y-3">
+              <div>
+                <label class="text-[11px] font-bold text-slate-300 uppercase">Target Exam Track:</label>
+                <div class="flex flex-wrap gap-1.5 mt-1.5">
+                  <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 px-2.5 py-1 rounded-lg font-bold">JEE Advanced (Paper 1)</span>
+                  <span class="text-[10px] bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg">JEE Mains 2026</span>
+                  <span class="text-[10px] bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg">UPSC CSAT</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="text-[11px] font-bold text-slate-300 uppercase">Topic Focus:</label>
+                <input type="text" value="Definite Integrals & Complex Numbers" class="w-full bg-slate-950/80 border border-slate-700/60 rounded-xl px-3 py-1.5 text-xs text-white mt-1 outline-none" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label class="text-[10px] text-slate-400 font-bold uppercase">Questions:</label>
+                  <input type="text" value="10 Questions" class="w-full bg-slate-950/80 border border-slate-700/60 rounded-xl px-2.5 py-1 text-xs text-white mt-1" />
+                </div>
+                <div>
+                  <label class="text-[10px] text-slate-400 font-bold uppercase">Marking Scheme:</label>
+                  <input type="text" value="+4 / -1" class="w-full bg-slate-950/80 border border-slate-700/60 rounded-xl px-2.5 py-1 text-xs text-white mt-1" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Generated Questions -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  Generated CBT Questions
+                </h4>
+                <span class="text-[10px] text-emerald-400 font-bold">100% LaTeX Verified</span>
+              </div>
+
+              <div class="glass-card p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">Question 1</span>
+                  <span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold">JEE Advanced Hard</span>
+                </div>
+
+                <div class="text-xs text-white leading-relaxed font-mono">
+                  Let $f(x)$ be differentiable on $[0,1]$ with $f(0)=0$ and $f'(x) \\le \\sqrt{1 - f(x)^2}$. Find the supremum of $\\int_0^1 f(x)\\,dx$:
+                </div>
+
+                <div class="space-y-1 pt-1 text-[11px]">
+                  <div class="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800 text-slate-300 font-mono">A) $\\frac{\\pi}{4} - \\frac{1}{2}$</div>
+                  <div class="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800 text-slate-300 font-mono">B) $\\frac{\\pi - 2}{4}$</div>
+                  <div class="bg-emerald-950/40 border border-emerald-500/40 p-1.5 rounded-lg text-emerald-300 font-mono font-bold flex justify-between">
+                    <span>C) $1 - \\cos(1)$</span>
+                    <span class="text-[10px]">✓ Correct Key</span>
+                  </div>
+                  <div class="bg-slate-950/60 p-1.5 rounded-lg border border-slate-800 text-slate-300 font-mono">D) $\\sin(1)$</div>
+                </div>
+
+                <div class="bg-slate-950/80 p-2 rounded-xl text-[10px] text-slate-400 border border-slate-800">
+                  <b class="text-emerald-400">Solution:</b> Separating $\\frac{f'}{\\sqrt{1-f^2}} \\le 1 \\implies f(x) \\le \\sin(x)$. $\\int_0^1 \\sin(x)\\,dx = 1 - \\cos(1)$.
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentTab === 'dashboard') {
         container.innerHTML = `
           <div class="p-4 space-y-4">
             <div class="flex items-center justify-between pt-1">

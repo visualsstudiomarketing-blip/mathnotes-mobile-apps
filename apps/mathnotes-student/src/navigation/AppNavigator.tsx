@@ -1,7 +1,7 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Compass, BookOpen, Sparkles, LayoutDashboard } from 'lucide-react-native';
+import { Compass, BookOpen, Sparkles, LayoutDashboard, Camera } from 'lucide-react-native';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { CourseCatalogScreen } from '../screens/CourseCatalogScreen';
@@ -11,8 +11,10 @@ import { QuizScreen } from '../screens/QuizScreen';
 import { CheckoutScreen } from '../screens/CheckoutScreen';
 import { MathNotesAIScreen } from '../screens/MathNotesAIScreen';
 import { StudentDashboardScreen } from '../screens/StudentDashboardScreen';
+import { VisionMathLensScreen } from '../screens/VisionMathLensScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { AuthService } from '../shared/services/authService';
+import { FloatingGlassTabBar } from '../shared/components/glass';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -20,17 +22,9 @@ const Stack = createNativeStackNavigator();
 function BottomTabs() {
   return (
     <Tab.Navigator
+      tabBar={(props) => <FloatingGlassTabBar {...props} activeAccentColor="#38BDF8" />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#0F172A',
-          borderTopColor: '#1E293B',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 6,
-        },
-        tabBarActiveTintColor: '#38BDF8',
-        tabBarInactiveTintColor: '#64748B',
       }}
     >
       <Tab.Screen
@@ -48,10 +42,18 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
+        name="VisionLens"
+        component={VisionMathLensScreen}
+        options={{
+          tabBarLabel: 'AI Lens',
+          tabBarIcon: ({ color, size }) => <Camera color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
         name="MathNotesAI"
         component={MathNotesAIScreen}
         options={{
-          tabBarLabel: 'MathNotes AI',
+          tabBarLabel: 'AI Mentor',
           tabBarIcon: ({ color, size }) => <Sparkles color={color} size={size} />,
         }}
       />

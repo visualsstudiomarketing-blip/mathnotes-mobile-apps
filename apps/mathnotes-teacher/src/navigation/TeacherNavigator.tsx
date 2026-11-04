@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LayoutGrid, Layers, GraduationCap, MessageSquare, User, TrendingUp } from 'lucide-react-native';
@@ -8,10 +8,12 @@ import { MyCoursesScreen } from '../screens/MyCoursesScreen';
 import { CreateCourseScreen } from '../screens/CreateCourseScreen';
 import { StudentAnalyticsScreen } from '../screens/StudentAnalyticsScreen';
 import { TeachersAIScreen } from '../screens/TeachersAIScreen';
+import { ExamStudioScreen } from '../screens/ExamStudioScreen';
 import { QNAInboxScreen } from '../screens/QNAInboxScreen';
 import { TeacherProfileScreen } from '../screens/TeacherProfileScreen';
 import { TeacherLoginScreen } from '../screens/TeacherLoginScreen';
 import { AuthService } from '../shared/services/authService';
+import { FloatingGlassTabBar } from '../shared/components/glass';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -19,17 +21,9 @@ const Stack = createNativeStackNavigator();
 function TeacherTabs() {
   return (
     <Tab.Navigator
+      tabBar={(props) => <FloatingGlassTabBar {...props} activeAccentColor="#10B981" />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#090D16',
-          borderTopColor: '#1E293B',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 6,
-        },
-        tabBarActiveTintColor: '#10B981',
-        tabBarInactiveTintColor: '#64748B',
       }}
     >
       <Tab.Screen
@@ -117,6 +111,11 @@ export function TeacherNavigator() {
             name="CreateCourse"
             component={CreateCourseScreen}
             options={{ title: 'Course Builder' }}
+          />
+          <Stack.Screen
+            name="ExamStudio"
+            component={ExamStudioScreen}
+            options={{ title: 'AI Exam Paper Studio' }}
           />
         </>
       )}

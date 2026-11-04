@@ -8,7 +8,7 @@ import {
   Modal,
   TextInput,
   Alert,
-  RefreshControl
+  RefreshControl,
 } from 'react-native';
 import {
   Users,
@@ -24,11 +24,12 @@ import {
   Send,
   Layers,
   HelpCircle,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react-native';
 import { TeacherAnalytics } from '../shared/types';
 import { ApiService } from '../shared/services/apiService';
 import { NotificationService } from '../shared/services/notificationService';
+import { AuroraBackground, GlassCard, LiquidGlassTokens } from '../shared/components/glass';
 
 export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [courses, setCourses] = useState<any[]>([]);
@@ -88,7 +89,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
     NotificationService.getInstance().sendPushNotification({
       title: `🔴 Live Class Scheduled: ${liveTopic}`,
       body: `Join Mentor Vikramaditya live on ${liveTime}. Click to add to your calendar!`,
-      data: { liveLink }
+      data: { liveLink },
     });
 
     Alert.alert(
@@ -102,271 +103,297 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
     setShowBroadcastModal(false);
 
     NotificationService.getInstance().sendPushNotification({
-      title: '📢 Announcement from Instructor',
+      title: '📢 Instructor Announcement',
       body: broadcastMessage,
-      data: { type: 'batch_announcement' }
     });
 
-    setBroadcastMessage('');
     Alert.alert(
-      'Broadcast Sent!',
-      `Your announcement was delivered to all ${analytics.totalStudents} active students.`
+      'Broadcast Dispatched! 📡',
+      `Sent to ${analytics.totalStudents} active student devices via Expo Push Cloud.`
     );
+    setBroadcastMessage('');
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10B981" />}
-    >
-      {/* Header Banner */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.welcomeSubtitle}>Educator Portal • Mathnotes India 2026</Text>
-          <Text style={styles.welcomeTitle}>Welcome back, Mentor</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.aiCopilotBtn}
-          onPress={() => navigation.navigate('TeachersAI')}
-        >
-          <Sparkles color="#10B981" size={18} />
-          <Text style={styles.aiCopilotText}>Teachers AI</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* KPI Stats Grid */}
-      <View style={styles.statsGrid}>
-        <View style={styles.statCard}>
-          <View style={[styles.statIconBg, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
-            <Users color="#38BDF8" size={20} />
+    <AuroraBackground variant="teacher">
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10B981" />}
+      >
+        {/* Header Banner */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.welcomeSubtitle}>EDUCATOR PORTAL • MATHNOTES INDIA 2026</Text>
+            <Text style={styles.welcomeTitle}>Welcome back, Mentor</Text>
           </View>
-          <Text style={styles.statNumber}>{analytics.totalStudents}</Text>
-          <Text style={styles.statLabel}>Enrolled Students</Text>
-        </View>
-
-        <View style={styles.statCard}>
-          <View style={[styles.statIconBg, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
-            <IndianRupee color="#10B981" size={20} />
-          </View>
-          <Text style={styles.statNumber}>₹{(analytics.monthlyRevenue / 1000).toFixed(1)}k</Text>
-          <Text style={styles.statLabel}>This Month (Net)</Text>
-        </View>
-
-        <View style={styles.statCard}>
-          <View style={[styles.statIconBg, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
-            <Star color="#F59E0B" size={20} fill="#F59E0B" />
-          </View>
-          <Text style={styles.statNumber}>{analytics.averageRating}</Text>
-          <Text style={styles.statLabel}>Avg Rating</Text>
-        </View>
-
-        <View style={styles.statCard}>
-          <View style={[styles.statIconBg, { backgroundColor: 'rgba(168, 85, 247, 0.15)' }]}>
-            <BookOpen color="#A855F7" size={20} />
-          </View>
-          <Text style={styles.statNumber}>{analytics.activeCourses}</Text>
-          <Text style={styles.statLabel}>Live Courses</Text>
-        </View>
-      </View>
-
-      {/* Quick Operations Row */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Live Operations & Batch Management</Text>
-        <View style={styles.actionRow}>
           <TouchableOpacity
-            style={styles.actionCard}
-            onPress={() => setShowLiveModal(true)}
-          >
-            <Video color="#EF4444" size={22} />
-            <Text style={styles.actionTitle}>Schedule Live</Text>
-            <Text style={styles.actionDesc}>Host Zoom / Jitsi class</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.actionCard}
-            onPress={() => setShowBroadcastModal(true)}
-          >
-            <Bell color="#F59E0B" size={22} />
-            <Text style={styles.actionTitle}>Push Broadcast</Text>
-            <Text style={styles.actionDesc}>Alert batch students</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Curriculum & Course Actions */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Curriculum Creation Studio</Text>
-        <View style={styles.actionRow}>
-          <TouchableOpacity
-            style={styles.actionCard}
-            onPress={() => navigation.navigate('CreateCourse')}
-          >
-            <PlusCircle color="#10B981" size={22} />
-            <Text style={styles.actionTitle}>New Course</Text>
-            <Text style={styles.actionDesc}>Create Tutor LMS curriculum</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.actionCard}
+            style={styles.aiCopilotBtn}
             onPress={() => navigation.navigate('TeachersAI')}
+            activeOpacity={0.8}
           >
-            <Sparkles color="#38BDF8" size={22} />
-            <Text style={styles.actionTitle}>Teachers AI</Text>
-            <Text style={styles.actionDesc}>Auto-generate tests & DPPs</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Course Performance List */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Your Active Courses</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Courses')}>
-            <Text style={styles.viewAllText}>Manage All ({courses.length})</Text>
+            <Sparkles color="#10B981" size={16} />
+            <Text style={styles.aiCopilotText}>Teachers AI</Text>
           </TouchableOpacity>
         </View>
 
-        {courses.slice(0, 4).map(course => (
-          <TouchableOpacity
-            key={course.id}
-            style={styles.courseItem}
-            onPress={() => navigation.navigate('Courses')}
+        {/* Liquid Glass KPI Stats Grid */}
+        <View style={styles.statsGrid}>
+          <GlassCard
+            style={styles.statGlassCard}
+            contentStyle={styles.statContent}
+            glowColor="rgba(56, 189, 248, 0.25)"
           >
-            <View style={styles.courseHeaderRow}>
-              <View style={styles.subjectBadge}>
-                <Text style={styles.subjectBadgeText}>{course.subject || 'Math'}</Text>
-              </View>
-              <Text style={styles.studentCountText}>{course.enrolledCount || 240} enrolled</Text>
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
+              <Users color="#38BDF8" size={19} />
             </View>
-            <Text style={styles.courseItemTitle}>{course.title}</Text>
-            <View style={styles.courseItemFooter}>
-              <Text style={styles.courseItemMeta}>{course.totalLessons || 12} Lessons • 3 Quizzes</Text>
-              <View style={styles.ratingBadge}>
-                <Star color="#F59E0B" size={13} fill="#F59E0B" />
-                <Text style={styles.ratingText}>{course.rating || '4.9'}</Text>
-              </View>
+            <Text style={styles.statNumber}>{analytics.totalStudents}</Text>
+            <Text style={styles.statLabel}>Enrolled Students</Text>
+          </GlassCard>
+
+          <GlassCard
+            style={styles.statGlassCard}
+            contentStyle={styles.statContent}
+            glowColor="rgba(16, 185, 129, 0.25)"
+          >
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+              <IndianRupee color="#10B981" size={19} />
             </View>
-          </TouchableOpacity>
-        ))}
-      </View>
+            <Text style={styles.statNumber}>₹{(analytics.monthlyRevenue / 1000).toFixed(1)}k</Text>
+            <Text style={styles.statLabel}>This Month (Net)</Text>
+          </GlassCard>
 
-      {/* Indian Taxation & Payouts Card */}
-      <View style={styles.taxCard}>
-        <Text style={styles.taxTitle}>🇮🇳 Indian Taxation & Payout Summary</Text>
-        <Text style={styles.taxDesc}>
-          Compliant with Section 194-O (1% TDS deducted and filed against PAN). Payouts are credited directly to your verified UPI/NEFT account on the 1st of every month.
-        </Text>
-        <Text style={styles.supportEmail}>Inquiries: teachers@mathnotes.courses</Text>
-      </View>
-
-      {/* Schedule Live Class Modal */}
-      <Modal visible={showLiveModal} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <Text style={styles.modalHeading}>Schedule Live Interactive Class</Text>
-            <Text style={styles.modalSubheading}>
-              Enrolled students will receive an instant Push Notification alert.
-            </Text>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Session Topic</Text>
-              <TextInput
-                style={styles.modalInput}
-                value={liveTopic}
-                onChangeText={setLiveTopic}
-                placeholder="e.g. JEE Conics & Hyperbola Shortcuts"
-                placeholderTextColor="#64748B"
-              />
+          <GlassCard
+            style={styles.statGlassCard}
+            contentStyle={styles.statContent}
+            glowColor="rgba(245, 158, 11, 0.25)"
+          >
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+              <Star color="#F59E0B" size={19} fill="#F59E0B" />
             </View>
+            <Text style={styles.statNumber}>{analytics.averageRating}</Text>
+            <Text style={styles.statLabel}>Avg Rating</Text>
+          </GlassCard>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Date & Time</Text>
-              <TextInput
-                style={styles.modalInput}
-                value={liveTime}
-                onChangeText={setLiveTime}
-                placeholder="e.g. Tomorrow, 6:00 PM IST"
-                placeholderTextColor="#64748B"
-              />
+          <GlassCard
+            style={styles.statGlassCard}
+            contentStyle={styles.statContent}
+            glowColor="rgba(168, 85, 247, 0.25)"
+          >
+            <View style={[styles.statIconBg, { backgroundColor: 'rgba(168, 85, 247, 0.15)' }]}>
+              <BookOpen color="#A855F7" size={19} />
             </View>
+            <Text style={styles.statNumber}>{analytics.activeCourses}</Text>
+            <Text style={styles.statLabel}>Live Courses</Text>
+          </GlassCard>
+        </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Live Classroom URL (Zoom / Jitsi)</Text>
-              <TextInput
-                style={styles.modalInput}
-                value={liveLink}
-                onChangeText={setLiveLink}
-                placeholder="https://mathnotes.courses/live/..."
-                placeholderTextColor="#64748B"
-              />
-            </View>
+        {/* Quick Operations Row */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Live Operations & Batch Management</Text>
+          <View style={styles.actionRow}>
+            <GlassCard
+              style={styles.actionGlassCard}
+              onPress={() => setShowLiveModal(true)}
+              glowColor="rgba(239, 68, 68, 0.25)"
+            >
+              <Video color="#EF4444" size={22} />
+              <Text style={styles.actionTitle}>Schedule Live</Text>
+              <Text style={styles.actionDesc}>Host Zoom / Jitsi class</Text>
+            </GlassCard>
 
-            <View style={styles.modalActionRow}>
-              <TouchableOpacity
-                style={styles.modalCancelBtn}
-                onPress={() => setShowLiveModal(false)}
-              >
-                <Text style={styles.modalCancelText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.modalConfirmBtn}
-                onPress={handleScheduleLiveClass}
-              >
-                <Video color="#FFFFFF" size={16} />
-                <Text style={styles.modalConfirmText}>Broadcast Class</Text>
-              </TouchableOpacity>
-            </View>
+            <GlassCard
+              style={styles.actionGlassCard}
+              onPress={() => setShowBroadcastModal(true)}
+              glowColor="rgba(245, 158, 11, 0.25)"
+            >
+              <Bell color="#F59E0B" size={22} />
+              <Text style={styles.actionTitle}>Push Broadcast</Text>
+              <Text style={styles.actionDesc}>Alert batch students</Text>
+            </GlassCard>
           </View>
         </View>
-      </Modal>
 
-      {/* Push Broadcast Modal */}
-      <Modal visible={showBroadcastModal} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <Text style={styles.modalHeading}>Dispatch Batch Push Notification</Text>
-            <Text style={styles.modalSubheading}>
-              Delivers directly to the lock screens of {analytics.totalStudents} students.
-            </Text>
+        {/* Curriculum Creation Studio */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Curriculum Creation Studio</Text>
+          <View style={styles.actionRow}>
+            <GlassCard
+              style={styles.actionGlassCard}
+              onPress={() => navigation.navigate('CreateCourse')}
+              glowColor="rgba(16, 185, 129, 0.3)"
+            >
+              <PlusCircle color="#10B981" size={22} />
+              <Text style={styles.actionTitle}>New Course</Text>
+              <Text style={styles.actionDesc}>Create Tutor LMS curriculum</Text>
+            </GlassCard>
 
-            <TextInput
-              style={[styles.modalInput, styles.modalTextArea]}
-              value={broadcastMessage}
-              onChangeText={setBroadcastMessage}
-              placeholder="e.g. Revision alert: Chapter 4 Limit Continuity DPP solutions are uploaded. Test is live on Sunday!"
-              placeholderTextColor="#64748B"
-              multiline
-            />
-
-            <View style={styles.modalActionRow}>
-              <TouchableOpacity
-                style={styles.modalCancelBtn}
-                onPress={() => setShowBroadcastModal(false)}
-              >
-                <Text style={styles.modalCancelText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.modalConfirmBtn}
-                onPress={handleSendBroadcast}
-              >
-                <Send color="#FFFFFF" size={16} />
-                <Text style={styles.modalConfirmText}>Send Push Alert</Text>
-              </TouchableOpacity>
-            </View>
+            <GlassCard
+              style={styles.actionGlassCard}
+              onPress={() => navigation.navigate('ExamStudio')}
+              glowColor="rgba(56, 189, 248, 0.3)"
+            >
+              <Sparkles color="#38BDF8" size={22} />
+              <Text style={styles.actionTitle}>AI Exam Studio</Text>
+              <Text style={styles.actionDesc}>Auto-generate tests & DPPs</Text>
+            </GlassCard>
           </View>
         </View>
-      </Modal>
-    </ScrollView>
+
+        {/* Course Performance List */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Your Active Courses</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Courses')}>
+              <Text style={styles.viewAllText}>Manage All ({courses.length}) →</Text>
+            </TouchableOpacity>
+          </View>
+
+          {courses.slice(0, 4).map(course => (
+            <GlassCard
+              key={course.id}
+              style={styles.courseGlassItem}
+              onPress={() => navigation.navigate('Courses')}
+              glowColor="rgba(16, 185, 129, 0.2)"
+            >
+              <View style={styles.courseHeaderRow}>
+                <View style={styles.subjectBadge}>
+                  <Text style={styles.subjectBadgeText}>{course.subject || 'Math'}</Text>
+                </View>
+                <Text style={styles.studentCountText}>{course.enrolledCount || 240} enrolled</Text>
+              </View>
+              <Text style={styles.courseItemTitle}>{course.title}</Text>
+              <View style={styles.courseItemFooter}>
+                <Text style={styles.courseItemMeta}>{course.totalLessons || 12} Lessons • 3 Quizzes</Text>
+                <View style={styles.ratingBadge}>
+                  <Star color="#F59E0B" size={13} fill="#F59E0B" />
+                  <Text style={styles.ratingText}>{course.rating || '4.9'}</Text>
+                </View>
+              </View>
+            </GlassCard>
+          ))}
+        </View>
+
+        {/* Indian Taxation & Payouts Card */}
+        <GlassCard style={styles.taxGlass} glowColor="rgba(148, 163, 184, 0.15)">
+          <Text style={styles.taxTitle}>🇮🇳 Indian Taxation & Payout Summary</Text>
+          <Text style={styles.taxDesc}>
+            Compliant with Section 194-O (1% TDS deducted and filed against PAN). Payouts are credited directly to your verified UPI/NEFT account on the 1st of every month.
+          </Text>
+          <Text style={styles.supportEmail}>Inquiries: teachers@mathnotes.courses</Text>
+        </GlassCard>
+
+        {/* Schedule Live Class Modal */}
+        <Modal visible={showLiveModal} transparent animationType="slide">
+          <View style={styles.modalOverlay}>
+            <GlassCard style={styles.modalGlassBox} glowColor="rgba(239, 68, 68, 0.3)">
+              <Text style={styles.modalHeading}>Schedule Live Interactive Class</Text>
+              <Text style={styles.modalSubheading}>
+                Enrolled students will receive an instant Push Notification alert.
+              </Text>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Session Topic</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  value={liveTopic}
+                  onChangeText={setLiveTopic}
+                  placeholder="e.g. JEE Conics & Hyperbola Shortcuts"
+                  placeholderTextColor="#64748B"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Date & Time</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  value={liveTime}
+                  onChangeText={setLiveTime}
+                  placeholder="e.g. Tomorrow, 6:00 PM IST"
+                  placeholderTextColor="#64748B"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Live Classroom URL (Zoom / Jitsi)</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  value={liveLink}
+                  onChangeText={setLiveLink}
+                  placeholder="https://mathnotes.courses/live/..."
+                  placeholderTextColor="#64748B"
+                />
+              </View>
+
+              <View style={styles.modalActionRow}>
+                <TouchableOpacity
+                  style={styles.modalCancelBtn}
+                  onPress={() => setShowLiveModal(false)}
+                >
+                  <Text style={styles.modalCancelText}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.modalConfirmBtn}
+                  onPress={handleScheduleLiveClass}
+                >
+                  <Video color="#FFFFFF" size={16} />
+                  <Text style={styles.modalConfirmText}>Broadcast Class</Text>
+                </TouchableOpacity>
+              </View>
+            </GlassCard>
+          </View>
+        </Modal>
+
+        {/* Push Broadcast Modal */}
+        <Modal visible={showBroadcastModal} transparent animationType="slide">
+          <View style={styles.modalOverlay}>
+            <GlassCard style={styles.modalGlassBox} glowColor="rgba(245, 158, 11, 0.3)">
+              <Text style={styles.modalHeading}>Dispatch Batch Push Notification</Text>
+              <Text style={styles.modalSubheading}>
+                Delivers directly to the lock screens of {analytics.totalStudents} students.
+              </Text>
+
+              <TextInput
+                style={[styles.modalInput, styles.modalTextArea]}
+                value={broadcastMessage}
+                onChangeText={setBroadcastMessage}
+                placeholder="e.g. Revision alert: Chapter 4 Limit Continuity DPP solutions are uploaded. Test is live on Sunday!"
+                placeholderTextColor="#64748B"
+                multiline
+              />
+
+              <View style={styles.modalActionRow}>
+                <TouchableOpacity
+                  style={styles.modalCancelBtn}
+                  onPress={() => setShowBroadcastModal(false)}
+                >
+                  <Text style={styles.modalCancelText}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.modalConfirmBtn}
+                  onPress={handleSendBroadcast}
+                >
+                  <Send color="#FFFFFF" size={16} />
+                  <Text style={styles.modalConfirmText}>Send Push Alert</Text>
+                </TouchableOpacity>
+              </View>
+            </GlassCard>
+          </View>
+        </Modal>
+      </ScrollView>
+    </AuroraBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#090D16',
+  },
+  scrollContent: {
+    paddingBottom: 110,
   },
   header: {
     flexDirection: 'row',
@@ -378,25 +405,26 @@ const styles = StyleSheet.create({
   },
   welcomeSubtitle: {
     color: '#10B981',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.6,
   },
   welcomeTitle: {
     color: '#F8FAFC',
     fontSize: 22,
     fontWeight: '800',
     marginTop: 2,
+    letterSpacing: -0.3,
   },
   aiCopilotBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+    borderColor: 'rgba(16, 185, 129, 0.35)',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 12,
+    borderRadius: 14,
     gap: 6,
   },
   aiCopilotText: {
@@ -408,16 +436,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 12,
-    gap: 8,
+    gap: 10,
     marginBottom: 20,
   },
-  statCard: {
+  statGlassCard: {
     flex: 1,
     minWidth: '46%',
-    backgroundColor: '#131B2E',
-    borderWidth: 1,
-    borderColor: '#1E293B',
-    borderRadius: 16,
+  },
+  statContent: {
     padding: 14,
     gap: 4,
   },
@@ -432,11 +458,11 @@ const styles = StyleSheet.create({
   statNumber: {
     color: '#F8FAFC',
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '900',
   },
   statLabel: {
     color: '#94A3B8',
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: '600',
   },
   section: {
@@ -451,9 +477,10 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     color: '#F8FAFC',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '800',
     marginBottom: 12,
+    letterSpacing: -0.2,
   },
   viewAllText: {
     color: '#38BDF8',
@@ -464,14 +491,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
-  actionCard: {
+  actionGlassCard: {
     flex: 1,
-    backgroundColor: '#131B2E',
-    borderWidth: 1,
-    borderColor: '#1E293B',
-    borderRadius: 16,
-    padding: 16,
-    gap: 4,
   },
   actionTitle: {
     color: '#F8FAFC',
@@ -481,16 +502,10 @@ const styles = StyleSheet.create({
   },
   actionDesc: {
     color: '#64748B',
-    fontSize: 12,
+    fontSize: 11.5,
   },
-  courseItem: {
-    backgroundColor: '#131B2E',
-    borderWidth: 1,
-    borderColor: '#1E293B',
-    borderRadius: 16,
-    padding: 14,
+  courseGlassItem: {
     marginBottom: 10,
-    gap: 6,
   },
   courseHeaderRow: {
     flexDirection: 'row',
@@ -498,12 +513,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subjectBadge: {
-    backgroundColor: '#090D16',
+    backgroundColor: 'rgba(15, 23, 42, 0.8)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: 'rgba(56, 189, 248, 0.25)',
   },
   subjectBadgeText: {
     color: '#38BDF8',
@@ -518,6 +533,7 @@ const styles = StyleSheet.create({
     color: '#F8FAFC',
     fontSize: 15,
     fontWeight: '700',
+    marginVertical: 4,
   },
   courseItemFooter: {
     flexDirection: 'row',
@@ -539,20 +555,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
   },
-  taxCard: {
+  taxGlass: {
     marginHorizontal: 16,
-    marginBottom: 32,
-    backgroundColor: 'rgba(30, 41, 59, 0.4)',
-    borderWidth: 1,
-    borderColor: '#1E293B',
-    borderRadius: 16,
-    padding: 16,
-    gap: 6,
+    marginBottom: 28,
   },
   taxTitle: {
     color: '#CBD5E1',
     fontSize: 13,
     fontWeight: '700',
+    marginBottom: 4,
   },
   taxDesc: {
     color: '#64748B',
@@ -563,33 +574,31 @@ const styles = StyleSheet.create({
     color: '#10B981',
     fontSize: 12,
     fontWeight: '600',
-    marginTop: 4,
+    marginTop: 6,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(0,0,0,0.78)',
     justifyContent: 'center',
     padding: 20,
   },
-  modalBox: {
-    backgroundColor: '#131B2E',
-    borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 20,
-    padding: 20,
-    gap: 14,
+  modalGlassBox: {
+    borderRadius: 22,
   },
   modalHeading: {
     color: '#F8FAFC',
     fontSize: 18,
     fontWeight: '800',
+    marginBottom: 4,
   },
   modalSubheading: {
     color: '#94A3B8',
     fontSize: 13,
+    marginBottom: 14,
   },
   inputGroup: {
     gap: 6,
+    marginBottom: 12,
   },
   inputLabel: {
     color: '#CBD5E1',
@@ -597,9 +606,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   modalInput: {
-    backgroundColor: '#090D16',
+    backgroundColor: 'rgba(9, 13, 22, 0.85)',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 10,
@@ -609,15 +618,16 @@ const styles = StyleSheet.create({
   modalTextArea: {
     height: 100,
     textAlignVertical: 'top',
+    marginBottom: 12,
   },
   modalActionRow: {
     flexDirection: 'row',
     gap: 10,
-    marginTop: 6,
+    marginTop: 8,
   },
   modalCancelBtn: {
     flex: 1,
-    backgroundColor: '#1E293B',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',

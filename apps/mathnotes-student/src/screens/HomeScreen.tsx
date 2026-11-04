@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { BookOpen, Sparkles, Award, ArrowRight, Star, Clock } from 'lucide-react-native';
+import { BookOpen, Sparkles, Award, ArrowRight, Star, Clock, Compass } from 'lucide-react-native';
 import { ApiService } from '../shared/services/apiService';
 import { Course } from '../shared/types';
+import { AuroraBackground, GlassCard, LiquidGlassTokens } from '../shared/components/glass';
 
 export const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -32,136 +33,170 @@ export const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   }, []);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Hero Banner */}
-      <View style={styles.heroCard}>
-        <View style={styles.badgeRow}>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>CONCEPTUAL MASTERY</Text>
-          </View>
-        </View>
-        <Text style={styles.heroTitle}>Learn. Practice. Understand. Achieve.</Text>
-        <Text style={styles.heroSubtitle}>
-          Master complex mathematics from first principles. Visual derivations, deliberate practice, and 24/7 AI mentoring.
-        </Text>
-        <TouchableOpacity
-          style={styles.heroCTA}
-          onPress={() => navigation.navigate('MathNotesAI')}
+    <AuroraBackground variant="student">
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Liquid Glass Hero Banner */}
+        <GlassCard
+          glowColor={LiquidGlassTokens.colors.accentCyan}
+          glowPosition="top-right"
+          style={styles.heroGlass}
         >
-          <Sparkles color="#FFFFFF" size={18} />
-          <Text style={styles.heroCTAText}>Ask MathNotes AI Mentor</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* 4 Pillars Highlight */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>The 4-Pillar Pedagogical System</Text>
-        <View style={styles.pillarsGrid}>
-          <View style={styles.pillarItem}>
-            <Text style={styles.pillarNumber}>01</Text>
-            <Text style={styles.pillarName}>Learn</Text>
-            <Text style={styles.pillarDesc}>Visual intuition before mechanical equations</Text>
+          <View style={styles.badgeRow}>
+            <View style={styles.glassBadge}>
+              <Sparkles color="#38BDF8" size={12} />
+              <Text style={styles.badgeText}>CONCEPTUAL RIGOR • IIT-JEE 2026</Text>
+            </View>
           </View>
-          <View style={styles.pillarItem}>
-            <Text style={styles.pillarNumber}>02</Text>
-            <Text style={styles.pillarName}>Practice</Text>
-            <Text style={styles.pillarDesc}>Deliberate, multi-variation problem solving</Text>
-          </View>
-          <View style={styles.pillarItem}>
-            <Text style={styles.pillarNumber}>03</Text>
-            <Text style={styles.pillarName}>Understand</Text>
-            <Text style={styles.pillarDesc}>Feynman explanations & error analysis</Text>
-          </View>
-          <View style={styles.pillarItem}>
-            <Text style={styles.pillarNumber}>04</Text>
-            <Text style={styles.pillarName}>Achieve</Text>
-            <Text style={styles.pillarDesc}>Exam resilience & analytical thinking</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Featured Courses */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Featured Courses</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
-            <Text style={styles.viewAllText}>View All</Text>
+          <Text style={styles.heroTitle}>Learn. Practice. Understand. Achieve.</Text>
+          <Text style={styles.heroSubtitle}>
+            Master complex mathematics from first principles. Visual derivations, deliberate practice, and 24/7 AI mentoring.
+          </Text>
+          <TouchableOpacity
+            style={styles.heroCTA}
+            onPress={() => navigation.navigate('MathNotesAI')}
+            activeOpacity={0.85}
+          >
+            <Sparkles color="#FFFFFF" size={18} />
+            <Text style={styles.heroCTAText}>Ask MathNotes AI Mentor</Text>
           </TouchableOpacity>
+        </GlassCard>
+
+        {/* 4 Pillars Highlight */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>The 4-Pillar Pedagogical System</Text>
+          <View style={styles.pillarsGrid}>
+            <GlassCard
+              style={styles.pillarCard}
+              glowColor="rgba(56, 189, 248, 0.2)"
+              contentStyle={styles.pillarContent}
+            >
+              <Text style={styles.pillarNumber}>01</Text>
+              <Text style={styles.pillarName}>Learn</Text>
+              <Text style={styles.pillarDesc}>Visual intuition before mechanical equations</Text>
+            </GlassCard>
+
+            <GlassCard
+              style={styles.pillarCard}
+              glowColor="rgba(139, 92, 246, 0.2)"
+              contentStyle={styles.pillarContent}
+            >
+              <Text style={styles.pillarNumber}>02</Text>
+              <Text style={styles.pillarName}>Practice</Text>
+              <Text style={styles.pillarDesc}>Deliberate, multi-variation problem solving</Text>
+            </GlassCard>
+
+            <GlassCard
+              style={styles.pillarCard}
+              glowColor="rgba(16, 185, 129, 0.2)"
+              contentStyle={styles.pillarContent}
+            >
+              <Text style={styles.pillarNumber}>03</Text>
+              <Text style={styles.pillarName}>Understand</Text>
+              <Text style={styles.pillarDesc}>Feynman explanations & error analysis</Text>
+            </GlassCard>
+
+            <GlassCard
+              style={styles.pillarCard}
+              glowColor="rgba(244, 63, 94, 0.2)"
+              contentStyle={styles.pillarContent}
+            >
+              <Text style={styles.pillarNumber}>04</Text>
+              <Text style={styles.pillarName}>Achieve</Text>
+              <Text style={styles.pillarDesc}>Exam resilience & analytical thinking</Text>
+            </GlassCard>
+          </View>
         </View>
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#38BDF8" style={{ marginTop: 20 }} />
-        ) : (
-          courses.map(course => (
-            <TouchableOpacity
-              key={course.id}
-              style={styles.courseCard}
-              onPress={() => navigation.navigate('CourseDetail', { courseId: course.id })}
-            >
-              <Image source={{ uri: course.thumbnailUrl }} style={styles.thumbnail} />
-              <View style={styles.courseContent}>
-                <View style={styles.subjectTag}>
-                  <Text style={styles.subjectTagText}>{course.subject}</Text>
-                </View>
-                <Text style={styles.courseTitle} numberOfLines={2}>
-                  {course.title}
-                </Text>
-                <Text style={styles.courseExcerpt} numberOfLines={2}>
-                  {course.excerpt}
-                </Text>
-                <View style={styles.courseMeta}>
-                  <View style={styles.metaItem}>
-                    <Star color="#F59E0B" size={14} fill="#F59E0B" />
-                    <Text style={styles.metaText}>{course.rating}</Text>
-                  </View>
-                  <View style={styles.metaItem}>
-                    <Clock color="#94A3B8" size={14} />
-                    <Text style={styles.metaText}>{course.duration}</Text>
-                  </View>
-                  <View style={styles.metaItem}>
-                    <BookOpen color="#94A3B8" size={14} />
-                    <Text style={styles.metaText}>{course.totalLessons} Lessons</Text>
-                  </View>
-                </View>
-              </View>
+        {/* Featured Courses */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Featured Courses</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
+              <Text style={styles.viewAllText}>View All →</Text>
             </TouchableOpacity>
-          ))
-        )}
-      </View>
-    </ScrollView>
+          </View>
+
+          {loading ? (
+            <ActivityIndicator size="large" color="#38BDF8" style={{ marginTop: 24 }} />
+          ) : (
+            courses.map(course => (
+              <GlassCard
+                key={course.id}
+                onPress={() => navigation.navigate('CourseDetail', { courseId: course.id })}
+                style={styles.courseGlassCard}
+                contentStyle={styles.courseGlassContent}
+                glowColor={LiquidGlassTokens.colors.accentSapphire}
+              >
+                <Image source={{ uri: course.thumbnailUrl }} style={styles.thumbnail} />
+                <View style={styles.courseContent}>
+                  <View style={styles.subjectTag}>
+                    <Text style={styles.subjectTagText}>{course.subject}</Text>
+                  </View>
+                  <Text style={styles.courseTitle} numberOfLines={2}>
+                    {course.title}
+                  </Text>
+                  <Text style={styles.courseExcerpt} numberOfLines={2}>
+                    {course.excerpt}
+                  </Text>
+                  <View style={styles.courseMeta}>
+                    <View style={styles.metaItem}>
+                      <Star color="#F59E0B" size={14} fill="#F59E0B" />
+                      <Text style={styles.metaText}>{course.rating}</Text>
+                    </View>
+                    <View style={styles.metaItem}>
+                      <Clock color="#94A3B8" size={14} />
+                      <Text style={styles.metaText}>{course.duration}</Text>
+                    </View>
+                    <View style={styles.metaItem}>
+                      <BookOpen color="#38BDF8" size={14} />
+                      <Text style={styles.metaText}>{course.totalLessons} Lessons</Text>
+                    </View>
+                  </View>
+                </View>
+              </GlassCard>
+            ))
+          )}
+        </View>
+      </ScrollView>
+    </AuroraBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
   },
-  heroCard: {
+  scrollContent: {
+    paddingBottom: 110, // Gives space for floating glass dock
+  },
+  heroGlass: {
     margin: 16,
-    padding: 24,
-    borderRadius: 20,
-    backgroundColor: '#1E293B',
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginTop: 12,
   },
   badgeRow: {
     flexDirection: 'row',
     marginBottom: 12,
   },
-  badge: {
-    backgroundColor: 'rgba(56, 189, 248, 0.15)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+  glassBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(56, 189, 248, 0.12)',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 9999,
     borderWidth: 1,
-    borderColor: '#38BDF8',
+    borderColor: 'rgba(56, 189, 248, 0.35)',
   },
   badgeText: {
     color: '#38BDF8',
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontSize: 10.5,
+    fontWeight: '800',
+    letterSpacing: 0.6,
   },
   heroTitle: {
     fontSize: 24,
@@ -169,11 +204,12 @@ const styles = StyleSheet.create({
     color: '#F8FAFC',
     lineHeight: 32,
     marginBottom: 8,
+    letterSpacing: -0.3,
   },
   heroSubtitle: {
-    fontSize: 14,
+    fontSize: 13.5,
     color: '#94A3B8',
-    lineHeight: 22,
+    lineHeight: 21,
     marginBottom: 18,
   },
   heroCTA: {
@@ -181,10 +217,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#2563EB',
-    paddingVertical: 12,
+    paddingVertical: 13,
     paddingHorizontal: 18,
-    borderRadius: 12,
+    borderRadius: 14,
     gap: 8,
+    shadowColor: '#2563EB',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 6,
   },
   heroCTAText: {
     color: '#FFFFFF',
@@ -193,82 +234,84 @@ const styles = StyleSheet.create({
   },
   section: {
     paddingHorizontal: 16,
-    marginBottom: 28,
+    marginBottom: 26,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 14,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '800',
     color: '#F8FAFC',
-    marginBottom: 14,
+    letterSpacing: -0.2,
   },
   viewAllText: {
     color: '#38BDF8',
-    fontWeight: '600',
-    fontSize: 14,
+    fontWeight: '700',
+    fontSize: 13.5,
   },
   pillarsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
     gap: 12,
   },
-  pillarItem: {
+  pillarCard: {
     width: '48%',
-    backgroundColor: '#1E293B',
+  },
+  pillarContent: {
     padding: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#334155',
   },
   pillarNumber: {
-    fontSize: 12,
-    fontWeight: '800',
+    fontSize: 11,
+    fontWeight: '900',
     color: '#38BDF8',
     marginBottom: 4,
+    letterSpacing: 0.5,
   },
   pillarName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
     color: '#F8FAFC',
     marginBottom: 4,
   },
   pillarDesc: {
-    fontSize: 12,
+    fontSize: 11.5,
     color: '#94A3B8',
     lineHeight: 16,
   },
-  courseCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
-    overflow: 'hidden',
+  courseGlassCard: {
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
+  },
+  courseGlassContent: {
+    padding: 0,
   },
   thumbnail: {
     width: '100%',
     height: 160,
+    borderTopLeftRadius: LiquidGlassTokens.radius.lg - 1,
+    borderTopRightRadius: LiquidGlassTokens.radius.lg - 1,
   },
   courseContent: {
     padding: 16,
   },
   subjectTag: {
     alignSelf: 'flex-start',
-    backgroundColor: '#0F172A',
+    backgroundColor: 'rgba(15, 23, 42, 0.8)',
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 3.5,
     borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(56, 189, 248, 0.2)',
     marginBottom: 8,
   },
   subjectTagText: {
     color: '#38BDF8',
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   courseTitle: {
     fontSize: 16,
@@ -286,7 +329,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     borderTopWidth: 1,
-    borderTopColor: '#334155',
+    borderTopColor: 'rgba(255, 255, 255, 0.08)',
     paddingTop: 10,
   },
   metaItem: {
@@ -300,4 +343,3 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
-
