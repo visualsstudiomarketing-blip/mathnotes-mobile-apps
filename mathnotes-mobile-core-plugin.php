@@ -60,48 +60,14 @@ add_filter('wp_check_filetype_and_ext', function($data, $file, $filename, $mimes
 }, 10, 4);
 
 function mathnotes_download_student_apk() {
-    $upload_dir = wp_upload_dir();
-    $apk_dir = $upload_dir['basedir'] . '/apks';
-    if (!file_exists($apk_dir)) {
-        wp_mkdir_p($apk_dir);
-    }
-    $apk_file = $apk_dir . '/mathnotes-student-v1.0.0.apk';
-    if (!file_exists($apk_file)) {
-        // Generate valid APK bundle package
-        file_put_contents($apk_file, "PK\x03\x04" . str_repeat("\x00", 26) . "AndroidManifest.xml" . str_repeat("MATHNOTES_STUDENT_APK_DATA", 100));
-    }
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/vnd.android.package-archive');
-    header('Content-Disposition: attachment; filename="mathnotes-student-v1.0.0.apk"');
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($apk_file));
-    readfile($apk_file);
+    $github_apk_url = 'https://github.com/visualsstudiomarketing-blip/mathnotes-mobile-apps/releases/download/v1.0.0/mathnotes-student.apk';
+    wp_redirect($github_apk_url, 302);
     exit;
 }
 
 function mathnotes_download_teacher_apk() {
-    $upload_dir = wp_upload_dir();
-    $apk_dir = $upload_dir['basedir'] . '/apks';
-    if (!file_exists($apk_dir)) {
-        wp_mkdir_p($apk_dir);
-    }
-    $apk_file = $apk_dir . '/mathnotes-teacher-v1.0.0.apk';
-    if (!file_exists($apk_file)) {
-        // Generate valid APK bundle package
-        file_put_contents($apk_file, "PK\x03\x04" . str_repeat("\x00", 26) . "AndroidManifest.xml" . str_repeat("MATHNOTES_TEACHER_APK_DATA", 100));
-    }
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/vnd.android.package-archive');
-    header('Content-Disposition: attachment; filename="mathnotes-teacher-v1.0.0.apk"');
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($apk_file));
-    readfile($apk_file);
+    $github_apk_url = 'https://github.com/visualsstudiomarketing-blip/mathnotes-mobile-apps/releases/download/v1.0.0/mathnotes-teacher.apk';
+    wp_redirect($github_apk_url, 302);
     exit;
 }
 
