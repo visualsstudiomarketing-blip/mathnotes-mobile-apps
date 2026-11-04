@@ -57,7 +57,7 @@ export const LoginScreen: React.FC<{ navigation: any; onLoginSuccess?: () => voi
             <Text style={styles.logoEmoji}>ðŸ“</Text>
           </View>
           <Text style={styles.brandTitle}>Mathnotes</Text>
-          <Text style={styles.brandTagline}>Learn â€¢ Practice â€¢ Understand â€¢ Achieve</Text>
+          <Text style={styles.brandTagline}>Learn • Practice • Understand • Achieve</Text>
         </View>
 
         {/* Benefits Card */}
@@ -102,7 +102,7 @@ export const LoginScreen: React.FC<{ navigation: any; onLoginSuccess?: () => voi
 
           <View style={styles.securityNote}>
             <ShieldCheck color="#64748B" size={14} />
-            <Text style={styles.securityText}>Verified Google OAuth â€¢ Encrypted Session</Text>
+            <Text style={styles.securityText}>Verified Google OAuth • Encrypted Session</Text>
           </View>
         </View>
 

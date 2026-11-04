@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -114,7 +114,7 @@ export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
 
             <View style={styles.courseProgressFooter}>
               <Text style={styles.footerNote}>{enr.completedLessonsCount} / {enr.course.totalLessons} Lessons</Text>
-              <Text style={styles.resumeText}>Continue Lesson â†’</Text>
+              <Text style={styles.resumeText}>Continue Lesson →</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -127,10 +127,10 @@ export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
           <View style={styles.settingItem}>
             <View style={styles.settingIconText}>
               <Bell color="#38BDF8" size={18} />
-              <div>
+              <View>
                 <Text style={styles.settingLabel}>Expo Push Notifications</Text>
                 <Text style={styles.settingDesc}>Quiz deadlines and mentor replies</Text>
-              </div>
+              </View>
             </View>
             <Switch
               value={pushEnabled}
@@ -146,10 +146,10 @@ export const StudentDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
           >
             <View style={styles.settingIconText}>
               <Sparkles color="#A855F7" size={18} />
-              <div>
+              <View>
                 <Text style={styles.settingLabel}>MathNotes AI Chat History</Text>
                 <Text style={styles.settingDesc}>Review past doubts & proofs</Text>
-              </div>
+              </View>
             </View>
             <ChevronRight color="#64748B" size={18} />
           </TouchableOpacity>

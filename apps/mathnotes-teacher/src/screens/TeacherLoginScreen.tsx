@@ -52,10 +52,10 @@ export const TeacherLoginScreen: React.FC<{ navigation: any; onLoginSuccess?: ()
         {/* Logo & Brand */}
         <View style={styles.brandContainer}>
           <View style={styles.logoBadge}>
-            <Text style={styles.logoEmoji}>ðŸŽ“</Text>
+            <Text style={styles.logoEmoji}>🎓</Text>
           </View>
           <Text style={styles.brandTitle}>Mathnotes Teacher</Text>
-          <Text style={styles.brandTagline}>Empowering Educators â€¢ Scaling Reach</Text>
+          <Text style={styles.brandTagline}>Empowering Educators • Scaling Reach</Text>
         </View>
 
         {/* Benefits Card */}
@@ -100,7 +100,7 @@ export const TeacherLoginScreen: React.FC<{ navigation: any; onLoginSuccess?: ()
 
           <View style={styles.securityNote}>
             <ShieldCheck color="#64748B" size={14} />
-            <Text style={styles.securityText}>Instructor Verification â€¢ Encrypted OAuth</Text>
+            <Text style={styles.securityText}>Instructor Verification • Encrypted OAuth</Text>
           </View>
         </View>
 

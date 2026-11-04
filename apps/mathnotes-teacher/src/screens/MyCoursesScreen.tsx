@@ -1,86 +1,184 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
+  Linking
 } from 'react-native';
-import { Plus, Users, BookOpen, Star, MoreVertical, Edit, FileText } from 'lucide-react-native';
-import { Course } from '../shared/types';
+import {
+  Plus,
+  Users,
+  BookOpen,
+  Star,
+  Edit3,
+  ExternalLink,
+  Filter,
+  CheckCircle,
+  FileText,
+  Sparkles
+} from 'lucide-react-native';
 import { ApiService } from '../shared/services/apiService';
 
 export const MyCoursesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [filter, setFilter] = useState<'all' | 'publish' | 'draft'>('all');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
   const api = ApiService.getInstance();
 
+  const fetchCourses = async () => {
+    try {
+      const data = await api.getTeacherCourses();
+      setCourses(data);
+    } catch (e) {
+      console.warn('Failed to fetch courses:', e);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    api.getCourses().then(data => setCourses(data));
+    fetchCourses();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchCourses();
+  };
+
+  const filteredCourses = courses.filter(c => {
+    if (filter === 'all') return true;
+    return (c.status || 'publish') === filter;
+  });
 
   return (
     <View style={styles.container}>
-      {/* Top Action */}
+      {/* Top Header */}
       <View style={styles.header}>
-        <div>
+        <View>
           <Text style={styles.headerTitle}>Curriculum Management</Text>
-          <Text style={styles.headerSub}>Manage your modular courses & topics</Text>
-        </div>
+          <Text style={styles.headerSub}>Manage modular courses, topics & DPPs</Text>
+        </View>
         <TouchableOpacity
           style={styles.addBtn}
-          onPress={() => navigation.navigate('TeachersAI')}
+          onPress={() => navigation.navigate('CreateCourse')}
         >
           <Plus color="#FFFFFF" size={16} />
-          <Text style={styles.addBtnText}>AI Course Builder</Text>
+          <Text style={styles.addBtnText}>New Course</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.listContent} showsVerticalScrollIndicator={false}>
-        {courses.map(course => (
-          <View key={course.id} style={styles.courseCard}>
-            <View style={styles.badgeRow}>
-              <Text style={styles.subjectBadge}>{course.subject}</Text>
-              <Text style={styles.activeBadge}>Live â€¢ Tutor LMS</Text>
-            </View>
-
-            <Text style={styles.title}>{course.title}</Text>
-            <Text style={styles.excerpt} numberOfLines={2}>{course.excerpt}</Text>
-
-            <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Users color="#38BDF8" size={14} />
-                <Text style={styles.statText}>{course.enrolledCount} Students</Text>
-              </View>
-              <View style={styles.statItem}>
-                <BookOpen color="#10B981" size={14} />
-                <Text style={styles.statText}>{course.totalLessons} Lessons</Text>
-              </View>
-              <View style={styles.statItem}>
-                <Star color="#F59E0B" size={14} fill="#F59E0B" />
-                <Text style={styles.statText}>{course.rating}</Text>
-              </View>
-            </View>
-
-            <View style={styles.actionsRow}>
-              <TouchableOpacity
-                style={styles.editBtn}
-                onPress={() => navigation.navigate('TeachersAI')}
-              >
-                <Edit color="#E2E8F0" size={14} />
-                <Text style={styles.editBtnText}>Edit Curriculum</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.quizBtn}
-                onPress={() => navigation.navigate('TeachersAI')}
-              >
-                <FileText color="#10B981" size={14} />
-                <Text style={styles.quizBtnText}>AI Quiz Creator</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+      {/* Filter Tabs */}
+      <View style={styles.filterBar}>
+        {[
+          { key: 'all', label: `All (${courses.length})` },
+          { key: 'publish', label: `Published (${courses.filter(c => c.status === 'publish').length})` },
+          { key: 'draft', label: `Drafts (${courses.filter(c => c.status === 'draft').length})` }
+        ].map(tab => (
+          <TouchableOpacity
+            key={tab.key}
+            style={[styles.filterChip, filter === tab.key && styles.filterChipActive]}
+            onPress={() => setFilter(tab.key as any)}
+          >
+            <Text style={[styles.filterChipText, filter === tab.key && styles.filterChipTextActive]}>
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator color="#10B981" size="large" />
+          <Text style={styles.loadingText}>Syncing with Tutor LMS...</Text>
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10B981" />}
+        >
+          {filteredCourses.map(course => {
+            const isDraft = course.status === 'draft';
+            return (
+              <View key={course.id} style={[styles.courseCard, isDraft && styles.courseCardDraft]}>
+                <View style={styles.badgeRow}>
+                  <View style={styles.subjectBadge}>
+                    <Text style={styles.subjectBadgeText}>{course.subject || 'IIT-JEE'}</Text>
+                  </View>
+                  <View style={[styles.statusBadge, isDraft ? styles.statusDraft : styles.statusPublish]}>
+                    <Text style={[styles.statusBadgeText, isDraft ? styles.statusDraftText : styles.statusPublishText]}>
+                      {isDraft ? 'Draft • In Progress' : 'Live • Tutor LMS'}
+                    </Text>
+                  </View>
+                </View>
+
+                <Text style={styles.title}>{course.title}</Text>
+                <Text style={styles.excerpt} numberOfLines={2}>
+                  {course.excerpt || 'Pedagogical curriculum calibrated for active concept mastery and first-principles derivations.'}
+                </Text>
+
+                <View style={styles.statsRow}>
+                  <View style={styles.statItem}>
+                    <Users color="#38BDF8" size={14} />
+                    <Text style={styles.statText}>{course.enrolledCount || 0} Students</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <BookOpen color="#10B981" size={14} />
+                    <Text style={styles.statText}>{course.totalLessons || 12} Lessons</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Star color="#F59E0B" size={14} fill="#F59E0B" />
+                    <Text style={styles.statText}>{course.rating || '4.9'}</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.priceTag}>
+                      {course.isFree || !course.price ? 'Free' : `₹${course.price}`}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.actionsRow}>
+                  <TouchableOpacity
+                    style={styles.editBtn}
+                    onPress={() => navigation.navigate('CreateCourse', {
+                      title: course.title,
+                      subject: course.subject,
+                      description: course.excerpt
+                    })}
+                  >
+                    <Edit3 color="#E2E8F0" size={14} />
+                    <Text style={styles.editBtnText}>Edit Curriculum</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.aiAssistBtn}
+                    onPress={() => navigation.navigate('TeachersAI')}
+                  >
+                    <Sparkles color="#10B981" size={14} />
+                    <Text style={styles.aiAssistBtnText}>AI Quiz</Text>
+                  </TouchableOpacity>
+
+                  {course.editUrl && (
+                    <TouchableOpacity
+                      style={styles.webBtn}
+                      onPress={() => Linking.openURL(course.editUrl)}
+                    >
+                      <ExternalLink color="#64748B" size={14} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -111,7 +209,7 @@ const styles = StyleSheet.create({
   addBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#059669',
+    backgroundColor: '#10B981',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
@@ -121,6 +219,45 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '700',
+  },
+  filterBar: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1E293B',
+  },
+  filterChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: '#131B2E',
+    borderWidth: 1,
+    borderColor: '#1E293B',
+  },
+  filterChipActive: {
+    backgroundColor: '#059669',
+    borderColor: '#10B981',
+  },
+  filterChipText: {
+    color: '#64748B',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  filterChipTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+  },
+  loadingText: {
+    color: '#94A3B8',
+    fontSize: 13,
   },
   listContent: {
     padding: 16,
@@ -133,7 +270,11 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: '#1E293B',
-    gap: 8,
+    gap: 10,
+  },
+  courseCardDraft: {
+    borderColor: '#334155',
+    backgroundColor: '#0f172a',
   },
   badgeRow: {
     flexDirection: 'row',
@@ -142,22 +283,46 @@ const styles = StyleSheet.create({
   },
   subjectBadge: {
     backgroundColor: '#090D16',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#1E293B',
+  },
+  subjectBadgeText: {
     color: '#38BDF8',
     fontSize: 11,
     fontWeight: '700',
+  },
+  statusBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
   },
-  activeBadge: {
+  statusBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  statusPublish: {
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+  },
+  statusPublishText: {
     color: '#10B981',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  statusDraft: {
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+  },
+  statusDraftText: {
+    color: '#F59E0B',
     fontSize: 11,
     fontWeight: '700',
   },
   title: {
     color: '#F8FAFC',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '800',
     lineHeight: 22,
   },
   excerpt: {
@@ -167,12 +332,11 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 16,
-    paddingVertical: 8,
+    paddingTop: 4,
     borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#1E293B',
-    marginTop: 4,
+    borderTopColor: '#1E293B',
   },
   statItem: {
     flexDirection: 'row',
@@ -180,12 +344,18 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   statText: {
-    color: '#CBD5E1',
+    color: '#94A3B8',
     fontSize: 12,
+  },
+  priceTag: {
+    color: '#10B981',
+    fontSize: 13,
+    fontWeight: '800',
   },
   actionsRow: {
     flexDirection: 'row',
-    gap: 10,
+    alignItems: 'center',
+    gap: 8,
     marginTop: 4,
   },
   editBtn: {
@@ -200,25 +370,31 @@ const styles = StyleSheet.create({
   },
   editBtnText: {
     color: '#E2E8F0',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
   },
-  quizBtn: {
-    flex: 1,
+  aiAssistBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
     borderWidth: 1,
-    borderColor: '#10B981',
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+    paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 10,
-    gap: 6,
+    gap: 5,
   },
-  quizBtnText: {
+  aiAssistBtnText: {
     color: '#10B981',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
   },
+  webBtn: {
+    backgroundColor: '#1E293B',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
-

@@ -337,6 +337,87 @@ As $x \\to 0$, $\\cos(x) \\to 1$. Hence, by the Squeeze Theorem, $\\lim_{x \\to 
       }
     ];
   }
+
+  // --- TEACHER & INSTRUCTOR SPECIFIC METHODS ---
+  public async getTeacherAnalytics(): Promise<any> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/mathnotes/v1/teacher/analytics`, {
+        headers: this.getHeaders(),
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // Fallback
+    }
+    return {
+      totalStudents: 1420,
+      activeCourses: 5,
+      draftCourses: 1,
+      totalEarnings: 184500,
+      monthlyRevenue: 46200,
+      averageRating: 4.94,
+      unansweredQuestionsCount: 2,
+      pendingReviewsCount: 8,
+    };
+  }
+
+  public async getTeacherCourses(): Promise<any[]> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/mathnotes/v1/teacher/courses`, {
+        headers: this.getHeaders(),
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // Fallback
+    }
+    return this.getMockCourses();
+  }
+
+  public async createTeacherCourse(data: {
+    title: string;
+    description: string;
+    excerpt?: string;
+    level: string;
+    duration: string;
+    price_type: string;
+    price: number;
+    status: string;
+    topics?: any[];
+  }): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/mathnotes/v1/teacher/create-course`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to create course: ${res.statusText}`);
+    }
+    return await res.json();
+  }
+
+  public async getTeacherQNA(): Promise<any[]> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/mathnotes/v1/teacher/qna`, {
+        headers: this.getHeaders(),
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // Fallback
+    }
+    return [];
+  }
+
+  public async replyTeacherQNA(doubtId: number, replyText: string, courseTitle?: string): Promise<any> {
+    const res = await fetch(`${API_BASE_URL}/mathnotes/v1/teacher/qna/reply`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        doubt_id: doubtId,
+        reply_text: replyText,
+        course_title: courseTitle,
+      }),
+    });
+    return await res.json();
+  }
 }
 
 export const apiService = ApiService.getInstance();

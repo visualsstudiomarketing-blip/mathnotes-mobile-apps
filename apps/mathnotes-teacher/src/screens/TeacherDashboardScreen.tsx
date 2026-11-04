@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Modal,
   TextInput,
-  Alert
+  Alert,
+  RefreshControl
 } from 'react-native';
 import {
   Users,
@@ -20,55 +21,78 @@ import {
   Bell,
   CheckCircle2,
   Calendar,
-  Send
+  Send,
+  Layers,
+  HelpCircle,
+  ArrowRight
 } from 'lucide-react-native';
-import { Course, TeacherAnalytics } from '../shared/types';
+import { TeacherAnalytics } from '../shared/types';
 import { ApiService } from '../shared/services/apiService';
 import { NotificationService } from '../shared/services/notificationService';
 
 export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [showLiveModal, setShowLiveModal] = useState(false);
-  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<TeacherAnalytics>({
+    totalStudents: 1420,
+    activeCourses: 5,
+    totalEarnings: 184500, // In INR ₹
+    monthlyRevenue: 46200, // In INR ₹
+    averageRating: 4.94,
+    pendingReviewsCount: 8,
+    unansweredQuestionsCount: 2,
+    allIndiaTopRankersCount: 18,
+  });
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Live session fields
+  // Live session modal fields
+  const [showLiveModal, setShowLiveModal] = useState(false);
   const [liveTopic, setLiveTopic] = useState('JEE Advanced King\'s Property Deep-Dive');
   const [liveTime, setLiveTime] = useState('Tomorrow, 6:00 PM IST');
   const [liveLink, setLiveLink] = useState('https://mathnotes.courses/live/jee-batch-1');
 
-  // Broadcast fields
+  // Broadcast modal fields
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
   const [broadcastMessage, setBroadcastMessage] = useState('');
 
   const api = ApiService.getInstance();
 
-  const analytics: TeacherAnalytics = {
-    totalStudents: 1420,
-    activeCourses: 4,
-    totalEarnings: 184500, // In INR
-    monthlyRevenue: 46200, // In INR
-    averageRating: 4.94,
-    pendingReviewsCount: 12,
-    unansweredQuestionsCount: 2,
-    allIndiaTopRankersCount: 18,
+  const loadData = async () => {
+    try {
+      const [analyticsData, coursesData] = await Promise.all([
+        api.getTeacherAnalytics(),
+        api.getTeacherCourses(),
+      ]);
+      if (analyticsData) setAnalytics(analyticsData);
+      if (coursesData) setCourses(coursesData);
+    } catch (e) {
+      console.warn('Dashboard sync error:', e);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
-    api.getCourses().then(data => setCourses(data));
+    loadData();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadData();
+  };
 
   const handleScheduleLiveClass = () => {
     if (!liveTopic.trim()) return;
     setShowLiveModal(false);
 
-    // Send Push Notification to all enrolled students
     NotificationService.getInstance().sendPushNotification({
-      title: `ðŸ”´ Live Class Scheduled: ${liveTopic}`,
+      title: `🔴 Live Class Scheduled: ${liveTopic}`,
       body: `Join Mentor Vikramaditya live on ${liveTime}. Click to add to your calendar!`,
       data: { liveLink }
     });
 
     Alert.alert(
-      'Live Session Broadcasted! ðŸš€',
+      'Live Session Broadcasted! 🚀',
       `Push alert sent to ${analytics.totalStudents} enrolled students for "${liveTopic}" at ${liveTime}.`
     );
   };
@@ -78,7 +102,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
     setShowBroadcastModal(false);
 
     NotificationService.getInstance().sendPushNotification({
-      title: 'ðŸ“¢ Announcement from Instructor',
+      title: '📢 Announcement from Instructor',
       body: broadcastMessage,
       data: { type: 'batch_announcement' }
     });
@@ -91,11 +115,15 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#10B981" />}
+    >
       {/* Header Banner */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.welcomeSubtitle}>Educator Portal â€¢ Mathnotes India 2026</Text>
+          <Text style={styles.welcomeSubtitle}>Educator Portal • Mathnotes India 2026</Text>
           <Text style={styles.welcomeTitle}>Welcome back, Mentor</Text>
         </View>
         <TouchableOpacity
@@ -107,7 +135,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
         </TouchableOpacity>
       </View>
 
-      {/* KPI Stats Grid (Indian Rupees & Performance) */}
+      {/* KPI Stats Grid */}
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
           <View style={[styles.statIconBg, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
@@ -121,7 +149,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
           <View style={[styles.statIconBg, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
             <IndianRupee color="#10B981" size={20} />
           </View>
-          <Text style={styles.statNumber}>â‚¹{(analytics.monthlyRevenue / 1000).toFixed(1)}k</Text>
+          <Text style={styles.statNumber}>₹{(analytics.monthlyRevenue / 1000).toFixed(1)}k</Text>
           <Text style={styles.statLabel}>This Month (Net)</Text>
         </View>
 
@@ -142,7 +170,7 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
         </View>
       </View>
 
-      {/* Educator Operations Action Row */}
+      {/* Quick Operations Row */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Live Operations & Batch Management</Text>
         <View style={styles.actionRow}>
@@ -168,24 +196,24 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
 
       {/* Curriculum & Course Actions */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Curriculum Synthesis</Text>
+        <Text style={styles.sectionTitle}>Curriculum Creation Studio</Text>
         <View style={styles.actionRow}>
           <TouchableOpacity
             style={styles.actionCard}
-            onPress={() => navigation.navigate('TeachersAI')}
+            onPress={() => navigation.navigate('CreateCourse')}
           >
-            <Sparkles color="#10B981" size={22} />
-            <Text style={styles.actionTitle}>Curriculum AI</Text>
-            <Text style={styles.actionDesc}>Auto-generate JEE/UPSC tests</Text>
+            <PlusCircle color="#10B981" size={22} />
+            <Text style={styles.actionTitle}>New Course</Text>
+            <Text style={styles.actionDesc}>Create Tutor LMS curriculum</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.actionCard}
-            onPress={() => navigation.navigate('MyCourses')}
+            onPress={() => navigation.navigate('TeachersAI')}
           >
-            <PlusCircle color="#38BDF8" size={22} />
-            <Text style={styles.actionTitle}>New Course</Text>
-            <Text style={styles.actionDesc}>Publish modular lessons</Text>
+            <Sparkles color="#38BDF8" size={22} />
+            <Text style={styles.actionTitle}>Teachers AI</Text>
+            <Text style={styles.actionDesc}>Auto-generate tests & DPPs</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -194,34 +222,38 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Your Active Courses</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('MyCourses')}>
-            <Text style={styles.viewAllText}>Manage All</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Courses')}>
+            <Text style={styles.viewAllText}>Manage All ({courses.length})</Text>
           </TouchableOpacity>
         </View>
 
-        {courses.map(course => (
-          <View key={course.id} style={styles.courseItem}>
+        {courses.slice(0, 4).map(course => (
+          <TouchableOpacity
+            key={course.id}
+            style={styles.courseItem}
+            onPress={() => navigation.navigate('Courses')}
+          >
             <View style={styles.courseHeaderRow}>
               <View style={styles.subjectBadge}>
-                <Text style={styles.subjectBadgeText}>{course.subject}</Text>
+                <Text style={styles.subjectBadgeText}>{course.subject || 'Math'}</Text>
               </View>
-              <Text style={styles.studentCountText}>{course.enrolledCount} enrolled</Text>
+              <Text style={styles.studentCountText}>{course.enrolledCount || 240} enrolled</Text>
             </View>
             <Text style={styles.courseItemTitle}>{course.title}</Text>
             <View style={styles.courseItemFooter}>
-              <Text style={styles.courseItemMeta}>{course.totalLessons} Lessons â€¢ {course.totalQuizzes} Mock CBTs</Text>
+              <Text style={styles.courseItemMeta}>{course.totalLessons || 12} Lessons • 3 Quizzes</Text>
               <View style={styles.ratingBadge}>
                 <Star color="#F59E0B" size={13} fill="#F59E0B" />
-                <Text style={styles.ratingText}>{course.rating}</Text>
+                <Text style={styles.ratingText}>{course.rating || '4.9'}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
 
-      {/* Payout & Financials Summary (India Tax Compliant) */}
+      {/* Indian Taxation & Payouts Card */}
       <View style={styles.taxCard}>
-        <Text style={styles.taxTitle}>ðŸ‡®ðŸ‡³ Indian Taxation & Payout Summary</Text>
+        <Text style={styles.taxTitle}>🇮🇳 Indian Taxation & Payout Summary</Text>
         <Text style={styles.taxDesc}>
           Compliant with Section 194-O (1% TDS deducted and filed against PAN). Payouts are credited directly to your verified UPI/NEFT account on the 1st of every month.
         </Text>
@@ -249,40 +281,41 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Date & Time (IST)</Text>
+              <Text style={styles.inputLabel}>Date & Time</Text>
               <TextInput
                 style={styles.modalInput}
                 value={liveTime}
                 onChangeText={setLiveTime}
-                placeholder="e.g. Tomorrow 6:00 PM IST"
+                placeholder="e.g. Tomorrow, 6:00 PM IST"
                 placeholderTextColor="#64748B"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Live Stream / Meeting Link</Text>
+              <Text style={styles.inputLabel}>Live Classroom URL (Zoom / Jitsi)</Text>
               <TextInput
                 style={styles.modalInput}
                 value={liveLink}
                 onChangeText={setLiveLink}
-                placeholder="Zoom, Google Meet, or Jitsi URL"
+                placeholder="https://mathnotes.courses/live/..."
                 placeholderTextColor="#64748B"
               />
             </View>
 
-            <View style={styles.modalBtnRow}>
+            <View style={styles.modalActionRow}>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
                 onPress={() => setShowLiveModal(false)}
               >
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
-                style={styles.modalSubmitBtn}
+                style={styles.modalConfirmBtn}
                 onPress={handleScheduleLiveClass}
               >
-                <Calendar color="#FFFFFF" size={16} />
-                <Text style={styles.modalSubmitText}>Broadcast to Batch</Text>
+                <Video color="#FFFFFF" size={16} />
+                <Text style={styles.modalConfirmText}>Broadcast Class</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -293,37 +326,34 @@ export const TeacherDashboardScreen: React.FC<{ navigation: any }> = ({ navigati
       <Modal visible={showBroadcastModal} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalHeading}>Send Batch Broadcast Push Alert</Text>
+            <Text style={styles.modalHeading}>Dispatch Batch Push Notification</Text>
             <Text style={styles.modalSubheading}>
-              Directly delivers a push notification to all {analytics.totalStudents} enrolled students.
+              Delivers directly to the lock screens of {analytics.totalStudents} students.
             </Text>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Announcement Message</Text>
-              <TextInput
-                style={[styles.modalInput, { height: 90, textAlignVertical: 'top' }]}
-                value={broadcastMessage}
-                onChangeText={setBroadcastMessage}
-                placeholder="e.g. Reminder: Sunday National CBT Mock starts at 10 AM. Revise Taylor Series!"
-                placeholderTextColor="#64748B"
-                multiline
-              />
-            </View>
+            <TextInput
+              style={[styles.modalInput, styles.modalTextArea]}
+              value={broadcastMessage}
+              onChangeText={setBroadcastMessage}
+              placeholder="e.g. Revision alert: Chapter 4 Limit Continuity DPP solutions are uploaded. Test is live on Sunday!"
+              placeholderTextColor="#64748B"
+              multiline
+            />
 
-            <View style={styles.modalBtnRow}>
+            <View style={styles.modalActionRow}>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
                 onPress={() => setShowBroadcastModal(false)}
               >
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
-                style={[styles.modalSubmitBtn, !broadcastMessage.trim() && { opacity: 0.5 }]}
+                style={styles.modalConfirmBtn}
                 onPress={handleSendBroadcast}
-                disabled={!broadcastMessage.trim()}
               >
                 <Send color="#FFFFFF" size={16} />
-                <Text style={styles.modalSubmitText}>Send Push Alert</Text>
+                <Text style={styles.modalConfirmText}>Send Push Alert</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -340,16 +370,17 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 18,
-    paddingBottom: 14,
+    paddingTop: 16,
+    paddingBottom: 16,
   },
   welcomeSubtitle: {
     color: '#10B981',
     fontSize: 12,
     fontWeight: '700',
+    letterSpacing: 0.5,
   },
   welcomeTitle: {
     color: '#F8FAFC',
@@ -360,34 +391,34 @@ const styles = StyleSheet.create({
   aiCopilotBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
     borderWidth: 1,
-    borderColor: '#10B981',
+    borderColor: 'rgba(16, 185, 129, 0.3)',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 10,
+    borderRadius: 12,
+    gap: 6,
   },
   aiCopilotText: {
     color: '#10B981',
-    fontSize: 12,
-    fontWeight: '800',
+    fontWeight: '700',
+    fontSize: 13,
   },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 16,
-    gap: 12,
-    marginTop: 6,
+    paddingHorizontal: 12,
+    gap: 8,
+    marginBottom: 20,
   },
   statCard: {
     flex: 1,
     minWidth: '46%',
     backgroundColor: '#131B2E',
-    borderRadius: 16,
-    padding: 16,
     borderWidth: 1,
     borderColor: '#1E293B',
+    borderRadius: 16,
+    padding: 14,
     gap: 4,
   },
   statIconBg: {
@@ -396,31 +427,33 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   statNumber: {
     color: '#F8FAFC',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
   },
   statLabel: {
     color: '#94A3B8',
     fontSize: 12,
+    fontWeight: '600',
   },
   section: {
     paddingHorizontal: 16,
-    marginTop: 22,
-    gap: 12,
+    marginBottom: 24,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 12,
   },
   sectionTitle: {
     color: '#F8FAFC',
     fontSize: 16,
     fontWeight: '800',
+    marginBottom: 12,
   },
   viewAllText: {
     color: '#38BDF8',
@@ -434,29 +467,30 @@ const styles = StyleSheet.create({
   actionCard: {
     flex: 1,
     backgroundColor: '#131B2E',
-    padding: 16,
-    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#1E293B',
+    borderRadius: 16,
+    padding: 16,
     gap: 4,
   },
   actionTitle: {
     color: '#F8FAFC',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '700',
-    marginTop: 4,
+    marginTop: 6,
   },
   actionDesc: {
-    color: '#94A3B8',
-    fontSize: 11,
+    color: '#64748B',
+    fontSize: 12,
   },
   courseItem: {
     backgroundColor: '#131B2E',
-    borderRadius: 14,
-    padding: 16,
     borderWidth: 1,
     borderColor: '#1E293B',
-    gap: 8,
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 10,
+    gap: 6,
   },
   courseHeaderRow: {
     flexDirection: 'row',
@@ -464,20 +498,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subjectBadge: {
-    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+    backgroundColor: '#090D16',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#1E293B',
   },
   subjectBadgeText: {
     color: '#38BDF8',
-    fontSize: 10,
-    fontWeight: '800',
+    fontSize: 11,
+    fontWeight: '700',
   },
   studentCountText: {
-    color: '#94A3B8',
-    fontSize: 11,
-    fontWeight: '600',
+    color: '#64748B',
+    fontSize: 12,
   },
   courseItemTitle: {
     color: '#F8FAFC',
@@ -488,10 +523,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 4,
   },
   courseItemMeta: {
     color: '#94A3B8',
-    fontSize: 11,
+    fontSize: 12,
   },
   ratingBadge: {
     flexDirection: 'row',
@@ -499,48 +535,48 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   ratingText: {
-    color: '#F59E0B',
+    color: '#F8FAFC',
     fontSize: 12,
     fontWeight: '700',
   },
   taxCard: {
-    margin: 16,
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
-    borderRadius: 16,
-    padding: 18,
+    marginHorizontal: 16,
+    marginBottom: 32,
+    backgroundColor: 'rgba(30, 41, 59, 0.4)',
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.25)',
-    gap: 8,
-    marginBottom: 40,
+    borderColor: '#1E293B',
+    borderRadius: 16,
+    padding: 16,
+    gap: 6,
   },
   taxTitle: {
-    color: '#10B981',
-    fontSize: 14,
-    fontWeight: '800',
+    color: '#CBD5E1',
+    fontSize: 13,
+    fontWeight: '700',
   },
   taxDesc: {
-    color: '#CBD5E1',
+    color: '#64748B',
     fontSize: 12,
     lineHeight: 18,
   },
   supportEmail: {
-    color: '#38BDF8',
+    color: '#10B981',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '600',
     marginTop: 4,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
+    backgroundColor: 'rgba(0,0,0,0.75)',
     justifyContent: 'center',
     padding: 20,
   },
   modalBox: {
     backgroundColor: '#131B2E',
-    borderRadius: 20,
-    padding: 22,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#334155',
+    borderRadius: 20,
+    padding: 20,
     gap: 14,
   },
   modalHeading: {
@@ -550,8 +586,7 @@ const styles = StyleSheet.create({
   },
   modalSubheading: {
     color: '#94A3B8',
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 13,
   },
   inputGroup: {
     gap: 6,
@@ -559,46 +594,52 @@ const styles = StyleSheet.create({
   inputLabel: {
     color: '#CBD5E1',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   modalInput: {
     backgroundColor: '#090D16',
     borderWidth: 1,
-    borderColor: '#1E293B',
-    borderRadius: 10,
-    padding: 12,
+    borderColor: '#334155',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     color: '#F8FAFC',
     fontSize: 13,
   },
-  modalBtnRow: {
+  modalTextArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  modalActionRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     gap: 10,
     marginTop: 6,
   },
   modalCancelBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
+    flex: 1,
+    backgroundColor: '#1E293B',
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
   },
   modalCancelText: {
-    color: '#94A3B8',
-    fontSize: 13,
+    color: '#CBD5E1',
     fontWeight: '700',
+    fontSize: 14,
   },
-  modalSubmitBtn: {
+  modalConfirmBtn: {
+    flex: 2,
+    backgroundColor: '#10B981',
+    paddingVertical: 12,
+    borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#10B981',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
+    justifyContent: 'center',
     gap: 6,
   },
-  modalSubmitText: {
+  modalConfirmText: {
     color: '#FFFFFF',
-    fontSize: 13,
     fontWeight: '800',
+    fontSize: 14,
   },
 });
-

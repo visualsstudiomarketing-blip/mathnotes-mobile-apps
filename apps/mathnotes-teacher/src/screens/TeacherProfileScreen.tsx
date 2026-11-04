@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,16 +6,19 @@ import {
   TouchableOpacity,
   Switch,
   Image,
-  StyleSheet
+  StyleSheet,
+  Linking
 } from 'react-native';
 import {
   GraduationCap,
   ShieldCheck,
-  DollarSign,
+  IndianRupee,
   Bell,
   Mail,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  ExternalLink,
+  BookOpen
 } from 'lucide-react-native';
 import { AuthService } from '../shared/services/authService';
 import { NotificationService } from '../shared/services/notificationService';
@@ -41,7 +44,7 @@ export const TeacherProfileScreen: React.FC = () => {
         />
         <View style={styles.profileInfo}>
           <Text style={styles.name}>{session?.user.name || 'Webxpro Digital'}</Text>
-          <Text style={styles.role}>Senior Mathematics Mentor</Text>
+          <Text style={styles.role}>Senior Mathematics Faculty & Mentor</Text>
           <View style={styles.badgeRow}>
             <ShieldCheck color="#10B981" size={13} />
             <Text style={styles.badgeText}>Verified Tutor LMS Instructor</Text>
@@ -54,14 +57,34 @@ export const TeacherProfileScreen: React.FC = () => {
         <Text style={styles.sectionTitle}>Financials & Payouts</Text>
         <View style={styles.card}>
           <View style={styles.payoutRow}>
-            <div>
+            <View>
               <Text style={styles.payoutLabel}>Total Platform Earnings</Text>
-              <Text style={styles.payoutAmount}>$4,850.00</Text>
-            </div>
+              <Text style={styles.payoutAmount}>₹1,84,500</Text>
+            </View>
             <View style={styles.payoutBadge}>
               <Text style={styles.payoutBadgeText}>Active Revenue Share</Text>
             </View>
           </View>
+        </View>
+      </View>
+
+      {/* Web Dashboard Quick Link */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Tutor LMS Web Portal</Text>
+        <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.portalLink}
+            onPress={() => Linking.openURL('https://mathnotes.courses/dashboard/')}
+          >
+            <View style={styles.portalLeft}>
+              <BookOpen color="#38BDF8" size={18} />
+              <View>
+                <Text style={styles.itemTitle}>Open Instructor Web Dashboard</Text>
+                <Text style={styles.itemDesc}>Access full certificate builder & detailed gradebook</Text>
+              </View>
+            </View>
+            <ExternalLink color="#64748B" size={16} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -72,10 +95,10 @@ export const TeacherProfileScreen: React.FC = () => {
           <View style={styles.settingItem}>
             <View style={styles.settingText}>
               <Bell color="#10B981" size={18} />
-              <div>
+              <View>
                 <Text style={styles.itemTitle}>New Doubt & Submission Alerts</Text>
                 <Text style={styles.itemDesc}>Instant notifications when students submit work</Text>
-              </div>
+              </View>
             </View>
             <Switch
               value={pushEnabled}
@@ -93,10 +116,10 @@ export const TeacherProfileScreen: React.FC = () => {
         <View style={styles.card}>
           <View style={styles.supportItem}>
             <Mail color="#38BDF8" size={18} />
-            <div>
+            <View>
               <Text style={styles.itemTitle}>Teacher Partnerships & Help</Text>
               <Text style={styles.supportEmail}>teachers@mathnotes.courses</Text>
-            </div>
+            </View>
           </View>
         </View>
       </View>
@@ -205,6 +228,18 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
   },
+  portalLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  portalLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -258,4 +293,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
