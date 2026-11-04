@@ -27,8 +27,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Install Student Dependencies
         working-directory: apps/mathnotes-student
@@ -36,6 +37,8 @@ jobs:
 
       - name: Build Student Android Release APK
         working-directory: apps/mathnotes-student
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
           npx expo prebuild --platform android --clean --no-install
           cd android
@@ -68,8 +71,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Install Teacher Dependencies
         working-directory: apps/mathnotes-teacher
@@ -77,6 +81,8 @@ jobs:
 
       - name: Build Teacher Android Release APK
         working-directory: apps/mathnotes-teacher
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
           npx expo prebuild --platform android --clean --no-install
           cd android
