@@ -33,21 +33,21 @@ jobs:
         working-directory: apps/mathnotes-student
         run: npm ci
 
-      - name: Setup EAS CLI
-        run: npm install -g eas-cli
-
-      - name: Build Android Bundle / APK
+      - name: Build Student Android Release APK
         working-directory: apps/mathnotes-student
         run: |
-          npx expo prebuild --platform android --clean
+          npx expo prebuild --platform android --clean --no-install
           cd android
+          chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
+          mkdir -p ../../../dist-apks
+          cp app/build/outputs/apk/release/*.apk ../../../dist-apks/mathnotes-student.apk
 
       - name: Upload Student APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mathnotes-student-release-apk
-          path: apps/mathnotes-student/android/app/build/outputs/apk/release/*.apk
+          name: mathnotes-student-apk
+          path: dist-apks/mathnotes-student.apk
 
   build-teacher-apk:
     name: Build Mathnotes Teacher APK
@@ -76,15 +76,18 @@ jobs:
         working-directory: apps/mathnotes-teacher
         run: npm ci
 
-      - name: Build Android Bundle / APK
+      - name: Build Teacher Android Release APK
         working-directory: apps/mathnotes-teacher
         run: |
-          npx expo prebuild --platform android --clean
+          npx expo prebuild --platform android --clean --no-install
           cd android
+          chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
+          mkdir -p ../../../dist-apks
+          cp app/build/outputs/apk/release/*.apk ../../../dist-apks/mathnotes-teacher.apk
 
       - name: Upload Teacher APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mathnotes-teacher-release-apk
-          path: apps/mathnotes-teacher/android/app/build/outputs/apk/release/*.apk
+          name: mathnotes-teacher-apk
+          path: dist-apks/mathnotes-teacher.apk

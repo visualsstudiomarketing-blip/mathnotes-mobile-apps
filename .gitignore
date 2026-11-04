@@ -26,3 +26,7 @@ Thumbs.db
 # Local Environment
 .env*.local
 *.log
+
+# Native directories
+android/
+ios/
