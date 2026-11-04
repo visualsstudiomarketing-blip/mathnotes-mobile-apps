@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Mathnotes Apps on Your Phone (Expo Go)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-6 selection:bg-sky-500 selection:text-white">
+
+  <div class="max-w-3xl w-full space-y-8">
+    <!-- Header -->
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Metro Bundlers Live on Port 8081 & 8082
+      </div>
+      <h1 class="text-3xl font-extrabold text-white tracking-tight">Run Both Apps on Your Physical Phone</h1>
+      <p class="text-sm text-slate-400 max-w-lg mx-auto">
+        Both the Student & Teacher apps are compiling live. Scan the QR code below using the free <b class="text-white">Expo Go</b> app on your Android phone (or Camera on iPhone).
+      </p>
+    </div>
+
+    <!-- 2 Apps Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Student App Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center space-y-4 hover:border-sky-500/50 transition">
+        <div class="w-12 h-12 rounded-2xl bg-sky-500/20 border border-sky-500/40 text-sky-400 flex items-center justify-center">
+          <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">STUDENT PORTAL</span>
+          <h2 class="text-lg font-bold text-white">Mathnotes (Student App)</h2>
+          <p class="text-xs text-slate-400 mt-1">NTA CBT Test Series, Snap & Solve Camera, KaTeX Math & Tutor LMS</p>
+        </div>
+
+        <!-- QR Code -->
+        <div class="bg-white p-3 rounded-2xl shadow-lg border-4 border-slate-800">
+          <img 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=exp%3A%2F%2F192.168.29.145%3A8081" 
+            alt="Student App QR Code" 
+            class="w-48 h-48 block"
+          />
+        </div>
+
+        <div class="space-y-1 w-full">
+          <div class="bg-slate-950 px-3 py-2 rounded-xl text-xs font-mono text-sky-300 border border-slate-800 break-all select-all">
+            exp://192.168.29.145:8081
+          </div>
+          <p class="text-[11px] text-slate-500">Scan via Expo Go app on Android or Camera on iOS</p>
+        </div>
+      </div>
+
+      <!-- Teacher App Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center space-y-4 hover:border-emerald-500/50 transition">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center">
+          <i data-lucide="presentation" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">EDUCATOR PORTAL</span>
+          <h2 class="text-lg font-bold text-white">Mathnotes Teacher</h2>
+          <p class="text-xs text-slate-400 mt-1">Live Class Scheduler, Student Analytics, Q&A Inbox & Push Broadcasts</p>
+        </div>
+
+        <!-- QR Code -->
+        <div class="bg-white p-3 rounded-2xl shadow-lg border-4 border-slate-800">
+          <img 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=exp%3A%2F%2F192.168.29.145%3A8082" 
+            alt="Teacher App QR Code" 
+            class="w-48 h-48 block"
+          />
+        </div>
+
+        <div class="space-y-1 w-full">
+          <div class="bg-slate-950 px-3 py-2 rounded-xl text-xs font-mono text-emerald-300 border border-slate-800 break-all select-all">
+            exp://192.168.29.145:8082
+          </div>
+          <p class="text-[11px] text-slate-500">Scan via Expo Go app on Android or Camera on iOS</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Instructions Bar -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 text-xs text-slate-300 space-y-3">
+      <h3 class="font-bold text-white text-sm flex items-center gap-2">
+        <i data-lucide="smartphone" class="w-4 h-4 text-sky-400"></i>
+        How to Open in 60 Seconds:
+      </h3>
+      <ol class="list-decimal list-inside space-y-2 text-slate-300">
+        <li>Make sure your phone is connected to the same Wi-Fi network as this computer (<b class="text-white">Wi-Fi IP: 192.168.29.145</b>).</li>
+        <li>Install <b class="text-white">Expo Go</b> from Google Play Store (Android) or Apple App Store (iOS) if you don't have it yet.</li>
+        <li>Open the camera or Expo Go, scan the QR code above, and the app will open directly on your mobile device!</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

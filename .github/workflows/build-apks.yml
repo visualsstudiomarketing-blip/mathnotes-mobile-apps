@@ -1,0 +1,90 @@
+name: Build Android Release APKs
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-student-apk:
+    name: Build Mathnotes Student APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: apps/mathnotes-student/package-lock.json
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Student Dependencies
+        working-directory: apps/mathnotes-student
+        run: npm ci
+
+      - name: Setup EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Build Android Bundle / APK
+        working-directory: apps/mathnotes-student
+        run: |
+          npx expo prebuild --platform android --clean
+          cd android
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Upload Student APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mathnotes-student-release-apk
+          path: apps/mathnotes-student/android/app/build/outputs/apk/release/*.apk
+
+  build-teacher-apk:
+    name: Build Mathnotes Teacher APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: apps/mathnotes-teacher/package-lock.json
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Teacher Dependencies
+        working-directory: apps/mathnotes-teacher
+        run: npm ci
+
+      - name: Build Android Bundle / APK
+        working-directory: apps/mathnotes-teacher
+        run: |
+          npx expo prebuild --platform android --clean
+          cd android
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Upload Teacher APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mathnotes-teacher-release-apk
+          path: apps/mathnotes-teacher/android/app/build/outputs/apk/release/*.apk

@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Mathnotes Teacher",
+    "slug": "mathnotes-teacher",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#090D16"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "courses.mathnotes.teacher",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow Mathnotes Teacher to access camera to host live lectures and review homework papers.",
+        "NSMicrophoneUsageDescription": "Allow Mathnotes Teacher to record audio feedback and host live interactive sessions.",
+        "NSPhotoLibraryUsageDescription": "Allow Mathnotes Teacher to attach study materials, formula sheets, and DPP PDFs."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#090D16"
+      },
+      "package": "courses.mathnotes.teacher",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_MEDIA_IMAGES",
+        "POST_NOTIFICATIONS",
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "PLACEHOLDER_EAS_TEACHER_PROJECT_ID"
+      },
+      "apiBaseUrl": "https://mathnotes.courses/wp-json",
+      "partnerEmail": "teachers@mathnotes.courses",
+      "privacyPolicyUrl": "https://mathnotes.courses/privacy-policy",
+      "termsUrl": "https://mathnotes.courses/terms"
+    }
+  }
+}

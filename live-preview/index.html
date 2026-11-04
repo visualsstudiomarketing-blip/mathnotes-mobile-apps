@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathnotes Ecosystem Live Simulator - Student & Teacher Apps (India 2026)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX for beautiful LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .device-shadow {
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 12px #1e293b, 0 0 0 14px #334155;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-down {
+      animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-sky-500 selection:text-white">
+
+  <!-- Top App Switcher & Environment Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-sky-500/20">
+        MN
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-wide text-white flex items-center gap-2">
+          Mathnotes Dual App Platform
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Tutor LMS Live</span>
+        </h1>
+        <p class="text-xs text-slate-400">mathnotes.courses • India 2026 Competitive Authority • Razorpay UPI & CBT Test Series</p>
+      </div>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+      <button id="btnStudentApp" onclick="switchApp('student')" class="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-sky-600 text-white shadow">
+        <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+        Mathnotes (Student)
+      </button>
+      <button id="btnTeacherApp" onclick="switchApp('teacher')" class="flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white">
+        <i data-lucide="presentation" class="w-3.5 h-3.5"></i>
+        Mathnotes Teacher
+      </button>
+    </div>
+
+    <!-- Notification & Fast Action Triggers -->
+    <div class="flex items-center gap-3 text-xs text-slate-400">
+      <a href="../open_on_phone.html" target="_blank" class="flex items-center gap-1.5 bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold px-3 py-1 rounded-lg shadow-md hover:opacity-95 transition">
+        <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+        📲 Open on Phone (QR Code)
+      </a>
+
+      <button onclick="openCbtModal()" class="flex items-center gap-1.5 bg-sky-500/15 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-lg hover:bg-sky-500/25 transition">
+        <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+        Launch NTA CBT Test
+      </button>
+
+      <button onclick="openCheckoutModal(101)" class="flex items-center gap-1.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-lg hover:bg-emerald-500/25 transition">
+        <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+        Razorpay UPI Demo
+      </button>
+
+      <div id="topUserBadge" class="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg cursor-pointer" onclick="toggleAuthModal()">
+        <img id="topUserAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=50&q=80" class="w-4 h-4 rounded-full" />
+        <span id="topUserName" class="text-white font-medium">Vikram</span>
+        <span class="text-[10px] text-sky-400">OAuth</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Simulator Main Canvas -->
+  <main class="flex-1 flex items-center justify-center p-4 md:p-8 relative">
+    
+    <!-- Phone Mockup Frame -->
+    <div class="w-full max-w-[420px] h-[820px] bg-slate-900 rounded-[44px] device-shadow flex flex-col overflow-hidden relative border border-slate-800">
+      
+      <!-- Phone Top Notch / Dynamic Island -->
+      <div class="h-7 bg-slate-950 flex items-center justify-between px-6 shrink-0 z-40 select-none">
+        <span class="text-[11px] font-semibold text-slate-400">9:41</span>
+        <div class="w-20 h-4 bg-slate-900 rounded-full flex items-center justify-center">
+          <div class="w-2 h-2 rounded-full bg-slate-800"></div>
+        </div>
+        <div class="flex items-center gap-1.5 text-slate-400">
+          <i data-lucide="wifi" class="w-3 h-3"></i>
+          <i data-lucide="battery" class="w-3.5 h-3.5"></i>
+        </div>
+      </div>
+
+      <!-- In-App Push Notification Toast Simulator -->
+      <div id="pushToast" class="hidden absolute top-9 left-3 right-3 bg-slate-900/95 border border-sky-500/50 rounded-2xl p-3 shadow-2xl z-50 animate-slide-down backdrop-blur">
+        <div class="flex items-start gap-2.5">
+          <div id="toastIconBg" class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span id="toastAppTitle" class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">MATHNOTES ALERT</span>
+              <span class="text-[9px] text-slate-500">now</span>
+            </div>
+            <h5 id="toastTitle" class="text-xs font-bold text-white mt-0.5">Quiz Deadline Reminder</h5>
+            <p id="toastBody" class="text-[11px] text-slate-300 mt-0.5 leading-tight">Checkpoint Quiz 1 deadline is tomorrow!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Screen Content (Dynamic) -->
+      <div id="screenContainer" class="flex-1 overflow-y-auto bg-slate-950 flex flex-col relative">
+        <!-- Rendered by JavaScript -->
+      </div>
+
+      <!-- Bottom App Navigation Bar -->
+      <div id="bottomNav" class="h-16 bg-slate-900/95 border-t border-slate-800 flex items-center justify-around px-2 shrink-0 z-40">
+        <!-- Injected by JavaScript depending on app mode -->
+      </div>
+
+      <!-- Home Indicator Bar -->
+      <div class="h-4 bg-slate-900 flex items-center justify-center shrink-0">
+        <div class="w-32 h-1 bg-slate-700 rounded-full"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Google OAuth Simulation Modal -->
+  <div id="googleAuthModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl text-center space-y-4">
+      <div class="w-12 h-12 rounded-2xl bg-white mx-auto flex items-center justify-center shadow-md">
+        <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" class="w-7 h-7" />
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white">Google OAuth 2.0 Sign-In</h3>
+        <p class="text-xs text-slate-400 mt-1">Select an account to authorize Mathnotes</p>
+      </div>
+
+      <div class="space-y-2 text-left pt-2">
+        <div onclick="loginWithGoogle('Vikram (Student)', 'student@mathnotes.courses', 'student')" class="bg-slate-800/80 hover:bg-slate-800 p-3 rounded-2xl flex items-center gap-3 cursor-pointer border border-slate-700/60 transition">
+          <div class="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold text-xs">V</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-white truncate">Vikram (Student)</p>
+            <p class="text-[11px] text-slate-400 truncate">student@mathnotes.courses</p>
+          </div>
+          <span class="text-[10px] bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded font-bold">Student</span>
+        </div>
+
+        <div onclick="loginWithGoogle('Webxpro Digital (Mentor)', 'teachers@mathnotes.courses', 'instructor')" class="bg-slate-800/80 hover:bg-slate-800 p-3 rounded-2xl flex items-center gap-3 cursor-pointer border border-slate-700/60 transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-xs">W</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-white truncate">Webxpro Digital (Mentor)</p>
+            <p class="text-[11px] text-slate-400 truncate">teachers@mathnotes.courses</p>
+          </div>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">Educator</span>
+        </div>
+      </div>
+
+      <button onclick="toggleAuthModal()" class="w-full text-xs text-slate-400 hover:text-white pt-2 font-medium">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- NTA CBT National Exam Simulator Modal -->
+  <div id="cbtModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Header -->
+      <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div>
+          <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">NTA CBT Computer Based Test</span>
+          <h3 class="text-sm font-bold text-white">IIT-JEE Main Mock 2026: Limits, Conics & AI Math</h3>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5 bg-sky-500/20 border border-sky-500/40 px-2.5 py-1 rounded-lg text-sky-400 font-bold text-xs">
+            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+            <span id="cbtTimer">29:45</span>
+          </div>
+          <button onclick="closeCbtModal()" class="text-slate-400 hover:text-white text-sm">✕</button>
+        </div>
+      </div>
+
+      <!-- Marking Banner -->
+      <div class="px-4 py-2 bg-slate-800/60 border-b border-slate-800 flex items-center justify-between text-xs shrink-0">
+        <span class="text-slate-300">Marking Scheme: <b class="text-emerald-400">+4</b> Correct | <b class="text-red-400">-1</b> Incorrect</span>
+        <span id="cbtSectionTag" class="text-[10px] bg-sky-600 text-white font-bold px-2 py-0.5 rounded">SECTION A: MCQ</span>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="flex-1 overflow-y-auto p-5 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Question Box (Col 1 & 2) -->
+        <div class="md:col-span-2 space-y-4">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-sky-400" id="cbtQNum">Question 1 of 5</span>
+            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold" id="cbtQDiff">JEE Advanced Tier</span>
+          </div>
+          <div id="cbtQuestionText" class="text-sm font-medium text-white leading-relaxed">
+            Evaluate the limit using first-principles Taylor expansion: $\lim_{x \to 0} \frac{x - \sin(x)}{x^3}$
+          </div>
+
+          <!-- Options or NAT Keypad -->
+          <div id="cbtOptionsContainer" class="space-y-2 pt-2">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Solution Breakdown (shown if graded) -->
+          <div id="cbtExplanationBox" class="hidden bg-sky-950/30 border border-sky-800/40 rounded-xl p-3 text-xs space-y-1">
+            <span class="font-bold text-sky-400">💡 First-Principles Solution:</span>
+            <p id="cbtExplanationText" class="text-slate-300"></p>
+          </div>
+        </div>
+
+        <!-- Palette (Col 3) -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 shrink-0">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Question Palette</h4>
+          <div class="grid grid-cols-5 gap-2" id="cbtPaletteGrid">
+            <!-- Palette cells rendered by JS -->
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 text-[10px] space-y-1 text-slate-400">
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500"></span> Answered</div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-500"></span> Not Answered</div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-purple-500"></span> Marked for Review</div>
+            <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-700"></span> Not Visited</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CBT Bottom Actions -->
+      <div class="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between shrink-0">
+        <button onclick="cbtClearResponse()" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-800 font-semibold">
+          Clear Response
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="cbtMarkReview()" class="text-xs bg-purple-500/20 text-purple-300 border border-purple-500/40 px-3 py-1.5 rounded-lg font-bold">
+            Review & Next
+          </button>
+          <button onclick="cbtSaveAndNext()" class="text-xs bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-1.5 rounded-lg shadow">
+            Save & Next
+          </button>
+          <button onclick="cbtSubmitTest()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg shadow ml-2">
+            Submit Test
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Razorpay UPI Checkout Modal -->
+  <div id="checkoutModal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            ₹
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Razorpay Secure Checkout</h3>
+            <p class="text-[10px] text-slate-400">100% UPI & Card Payments</p>
+          </div>
+        </div>
+        <button onclick="closeCheckoutModal()" class="text-slate-500 hover:text-white text-xs">✕</button>
+      </div>
+
+      <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2">
+        <span class="text-[10px] bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded font-bold uppercase">IIT-JEE 2026 Batch</span>
+        <h4 class="text-xs font-bold text-white">Limits, Calculus & Deep Neural Foundations Masterclass</h4>
+        <div class="flex justify-between items-center text-xs text-slate-300 pt-2 border-t border-slate-800">
+          <span>Tuition + 18% GST:</span>
+          <span class="text-sm font-black text-sky-400">₹2,499</span>
+        </div>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <label class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-sky-500 cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="zap" class="w-4 h-4 text-sky-400"></i>
+            <div>
+              <p class="font-bold text-white">UPI (Instant 1-Click)</p>
+              <p class="text-[10px] text-slate-400">Google Pay • PhonePe • Paytm</p>
+            </div>
+          </div>
+          <span class="w-3.5 h-3.5 rounded-full bg-sky-500"></span>
+        </label>
+
+        <label class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="credit-card" class="w-4 h-4 text-emerald-400"></i>
+            <div>
+              <p class="font-bold text-white">Debit / Credit Card</p>
+              <p class="text-[10px] text-slate-400">RuPay, Visa, MasterCard</p>
+            </div>
+          </div>
+          <span class="w-3.5 h-3.5 rounded-full border border-slate-700"></span>
+        </label>
+      </div>
+
+      <button onclick="processPaymentDemo()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2">
+        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+        Pay ₹2,499 Securely
+      </button>
+    </div>
+  </div>
+
+  <!-- JavaScript Simulator Logic -->
+  <script>
+    // State
+    let currentApp = 'student'; // 'student' | 'teacher'
+    let currentTab = 'home';    // 'home' | 'courses' | 'ai' | 'dashboard'
+    let currentUser = {
+      name: 'Vikram',
+      email: 'student@mathnotes.courses',
+      role: 'student'
+    };
+    let coursesData = [];
+    let studentMessages = [
+      {
+        role: 'assistant',
+        content: `### Welcome to MathNotes AI! 📐\n\nI am your 24/7 conceptual mathematics mentor, calibrated for **IIT-JEE (Main & Advanced), UPSC CSAT, CBSE Class 12, and AI Mathematics**.\n\nTap the **Camera 📸** below to **Snap & Solve** any math problem, or ask for step-by-step proofs!`
+      }
+    ];
+    let teacherMessages = [
+      {
+        role: 'assistant',
+        content: `### Welcome to MathNotes Teachers AI! 🎓\n\nI am your educator copilot. I can draft **60-minute active learning lesson plans**, generate **NTA-pattern CBT tests (+4/-1 marking)**, and synthesize **Python notebooks for AI mathematics**.`
+      }
+    ];
+
+    // CBT Questions Mock Data
+    const cbtQuestions = [
+      {
+        id: 1,
+        question: 'Evaluate the limit using first-principles Taylor expansion: $\\lim_{x \\to 0} \\frac{x - \\sin(x)}{x^3}$',
+        type: 'single_choice',
+        difficulty: 'JEE Advanced',
+        points: 4,
+        options: [
+          { id: 'A', text: '$\\frac{1}{6}$', isCorrect: true },
+          { id: 'B', text: '$\\frac{1}{3}$', isCorrect: false },
+          { id: 'C', text: '$0$', isCorrect: false },
+          { id: 'D', text: 'Undefined', isCorrect: false }
+        ],
+        explanation: 'Using Taylor expansion $\\sin(x) = x - \\frac{x^3}{6} + \\dots$, we have $\\frac{x - (x - x^3/6)}{x^3} = \\frac{1}{6}$.'
+      },
+      {
+        id: 2,
+        question: 'Find the remainder when $2^{2026}$ is divided by $7$ (UPSC CSAT / Modular Arithmetic):',
+        type: 'single_choice',
+        difficulty: 'Moderate',
+        points: 2.5,
+        options: [
+          { id: 'A', text: '$1$', isCorrect: false },
+          { id: 'B', text: '$2$', isCorrect: true },
+          { id: 'C', text: '$4$', isCorrect: false },
+          { id: 'D', text: '$6$', isCorrect: false }
+        ],
+        explanation: 'Since $2^3 \\equiv 1 \\pmod 7$, $2^{2026} = 2^{3 \\times 675 + 1} \\equiv (1)^{675} \\times 2 = 2 \\pmod 7$.'
+      },
+      {
+        id: 3,
+        question: 'Evaluate the definite integral using King\'s Property: $\\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx$',
+        type: 'single_choice',
+        difficulty: 'JEE Advanced',
+        points: 4,
+        options: [
+          { id: 'A', text: '$\\frac{\\pi}{2}$', isCorrect: false },
+          { id: 'B', text: '$\\frac{\\pi}{4}$', isCorrect: true },
+          { id: 'C', text: '$\\frac{\\pi}{8}$', isCorrect: false },
+          { id: 'D', text: '$1$', isCorrect: false }
+        ],
+        explanation: 'King\'s reflection $\\sin(\\pi/2 - x) = \\cos(x)$ gives $2I = \\int_0^{\\pi/2} 1 \\, dx = \\pi/2 \\implies I = \\pi/4$.'
+      },
+      {
+        id: 4,
+        question: '[Numerical Section B] Let $A$ be a $2 \\times 2$ matrix with eigenvalues $\\lambda_1 = 3$ and $\\lambda_2 = 5$. Compute the trace of $A^2$:',
+        type: 'numerical',
+        difficulty: 'JEE Advanced',
+        points: 4,
+        options: [
+          { id: 'NAT', text: '34', isCorrect: true }
+        ],
+        explanation: 'Eigenvalues of $A^2$ are $9$ and $25$. Trace is sum of eigenvalues: $\\text{Tr}(A^2) = 9 + 25 = 34$.'
+      },
+      {
+        id: 5,
+        question: 'For loss function $L(w) = w^2$, compute the gradient descent step $w_1$ with $\\eta = 0.1$ and $w_0 = 10$:',
+        type: 'single_choice',
+        difficulty: 'Easy',
+        points: 4,
+        options: [
+          { id: 'A', text: '$8.0$', isCorrect: true },
+          { id: 'B', text: '$9.0$', isCorrect: false },
+          { id: 'C', text: '$7.5$', isCorrect: false },
+          { id: 'D', text: '$10.0$', isCorrect: false }
+        ],
+        explanation: '$w_1 = w_0 - \\eta \\nabla L(w_0) = 10 - 0.1(20) = 8.0$.'
+      }
+    ];
+
+    let cbtCurrentIndex = 0;
+    let cbtAnswers = {};
+    let cbtStatuses = { 0: 'not_answered' };
+    let cbtTimerSeconds = 1785;
+    let cbtInterval = null;
+
+    const fallbackCourses = [
+      {
+        id: 739,
+        title: "IIT-JEE 2026 Calculus Masterclass: Limits, Continuity & Definite Integrals",
+        subject: "IIT-JEE",
+        price: 2499,
+        rating: 4.96,
+        lessons: 36,
+        duration: "32h 00m",
+        image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80",
+        desc: "Master Taylor series, King's Property, and NTA CBT test series (+4/-1 marking) with first principles."
+      },
+      {
+        id: 771,
+        title: "UPSC CSAT 2026: Quantitative Aptitude & Number Systems (Zero-to-Qualify)",
+        subject: "UPSC CSAT",
+        price: 1499,
+        rating: 4.92,
+        lessons: 28,
+        duration: "25h 00m",
+        image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80",
+        desc: "Comfortably clear the CSAT Paper-II hurdle. Speed-math, modular cyclicity, and probability heuristics."
+      },
+      {
+        id: 770,
+        title: "Mathematics of AI: Neural Networks, Gradient Descent & Python Foundations",
+        subject: "AI & Python",
+        price: 3499,
+        rating: 4.98,
+        lessons: 32,
+        duration: "30h 00m",
+        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+        desc: "Learn why gradient descent, backpropagation, and linear algebra power modern deep learning with Python."
+      },
+      {
+        id: 740,
+        title: "Algebra & Polynomials Mastery",
+        subject: "Algebra",
+        price: 1999,
+        rating: 4.88,
+        lessons: 18,
+        duration: "18h 30m",
+        image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80",
+        desc: "Deep dive into quadratic theory, complex numbers, binomial theorem, and polynomial roots."
+      },
+      {
+        id: 741,
+        title: "Coordinate Geometry & Vector Intuition",
+        subject: "Geometry",
+        price: 1999,
+        rating: 4.91,
+        lessons: 22,
+        duration: "20h 00m",
+        image: "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=600&q=80",
+        desc: "Spatial intuition for 2D & 3D coordinate geometry, conics focal properties, and vector cross/dot products."
+      }
+    ];
+
+    async function init() {
+      coursesData = fallbackCourses;
+      renderScreen();
+      lucide.createIcons();
+    }
+
+    function switchApp(app) {
+      currentApp = app;
+      currentTab = app === 'student' ? 'home' : 'dashboard';
+      const btnS = document.getElementById('btnStudentApp');
+      const btnT = document.getElementById('btnTeacherApp');
+
+      if (app === 'student') {
+        btnS.className = "flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-sky-600 text-white shadow";
+        btnT.className = "flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white";
+        currentUser.name = "Vikram";
+        currentUser.email = "student@mathnotes.courses";
+        currentUser.role = "student";
+      } else {
+        btnT.className = "flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow";
+        btnS.className = "flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white";
+        currentUser.name = "Webxpro Digital";
+        currentUser.email = "teachers@mathnotes.courses";
+        currentUser.role = "instructor";
+      }
+
+      document.getElementById('topUserName').innerText = currentUser.name.split(' ')[0];
+      renderScreen();
+    }
+
+    function setTab(tab) {
+      currentTab = tab;
+      renderScreen();
+    }
+
+    function renderScreen() {
+      const container = document.getElementById('screenContainer');
+      const nav = document.getElementById('bottomNav');
+      if (currentApp === 'student') {
+        renderStudentScreen(container, nav);
+      } else {
+        renderTeacherScreen(container, nav);
+      }
+      lucide.createIcons();
+      renderLaTeX(container);
+    }
+
+    function renderLaTeX(container) {
+      renderMathInElement(container, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
+    }
+
+    // --- STUDENT SCREENS ---
+    function renderStudentScreen(container, nav) {
+      nav.innerHTML = `
+        <button onclick="setTab('home')" class="flex flex-col items-center gap-1 ${currentTab === 'home' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+          <span class="text-[10px]">Learn</span>
+        </button>
+        <button onclick="setTab('courses')" class="flex flex-col items-center gap-1 ${currentTab === 'courses' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
+          <i data-lucide="book-open" class="w-5 h-5"></i>
+          <span class="text-[10px]">Courses</span>
+        </button>
+        <button onclick="setTab('ai')" class="flex flex-col items-center gap-1 relative ${currentTab === 'ai' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
+          <div class="w-8 h-8 -mt-4 bg-sky-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-sky-500/40">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[10px] mt-0.5">MathNotes AI</span>
+        </button>
+        <button onclick="setTab('dashboard')" class="flex flex-col items-center gap-1 ${currentTab === 'dashboard' ? 'text-sky-400 font-semibold' : 'text-slate-400'}">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          <span class="text-[10px]">Dashboard</span>
+        </button>
+      `;
+
+      if (currentTab === 'home') {
+        container.innerHTML = `
+          <div class="p-4 space-y-4">
+            <div class="flex items-center justify-between pt-1">
+              <div>
+                <p class="text-[11px] text-sky-400 font-bold uppercase tracking-wider">Mathnotes.courses</p>
+                <h2 class="text-lg font-extrabold text-white">Hi, ${currentUser.name.split(' ')[0]} 👋</h2>
+              </div>
+              <div onclick="toggleAuthModal()" class="w-8 h-8 rounded-full bg-sky-600/30 border border-sky-500 flex items-center justify-center text-xs font-bold text-sky-300 cursor-pointer">
+                G
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/60 rounded-2xl p-4 shadow-xl">
+              <span class="text-[10px] bg-sky-500/20 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-full font-bold">
+                INDIA 2026 AUTHORITY PLATFORM
+              </span>
+              <h3 class="text-base font-bold text-white mt-2">IIT-JEE • UPSC CSAT • AI Mathematics</h3>
+              <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                Replace memorization with visual intuition, NTA CBT mock testing, and 24/7 AI first-principles mentorship.
+              </p>
+              <div class="flex gap-2 mt-3">
+                <button onclick="openCbtModal()" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 shadow transition">
+                  <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+                  Start CBT Mock Test
+                </button>
+                <button onclick="setTab('ai')" class="bg-slate-800 text-sky-300 border border-slate-700 text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5">
+                  <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                  Snap & Solve
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Featured Masterclasses</h4>
+                <button onclick="setTab('courses')" class="text-xs text-sky-400 font-semibold">View All</button>
+              </div>
+              <div class="space-y-3">
+                ${coursesData.map(c => `
+                  <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow">
+                    <img src="${c.image}" class="w-full h-28 object-cover" />
+                    <div class="p-3">
+                      <div class="flex justify-between items-center">
+                        <span class="text-[10px] bg-slate-800 text-sky-400 font-semibold px-2 py-0.5 rounded">${c.subject}</span>
+                        <span class="text-xs font-black text-white">₹${c.price}</span>
+                      </div>
+                      <h5 class="text-xs font-bold text-white mt-1.5 line-clamp-1">${c.title}</h5>
+                      <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${c.desc}</p>
+                      <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2.5 pt-2 border-t border-slate-800/80">
+                        <span class="flex items-center gap-1 text-amber-400 font-semibold">
+                          <i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> ${c.rating}
+                        </span>
+                        <button onclick="openCheckoutModal(${c.id})" class="text-sky-400 font-bold bg-sky-500/10 px-2 py-1 rounded hover:bg-sky-500/20">
+                          Enroll (UPI) →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentTab === 'courses') {
+        container.innerHTML = `
+          <div class="p-4 space-y-3">
+            <h2 class="text-base font-bold text-white">Course Catalog & Test Series</h2>
+            <div class="space-y-3 pt-1">
+              ${coursesData.map(c => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex gap-3 cursor-pointer" onclick="openCheckoutModal(${c.id})">
+                  <img src="${c.image}" class="w-20 h-20 rounded-xl object-cover shrink-0" />
+                  <div class="flex-1 min-w-0">
+                    <div class="flex justify-between">
+                      <span class="text-[9px] bg-slate-800 text-sky-400 font-bold px-1.5 py-0.5 rounded">${c.subject}</span>
+                      <span class="text-xs font-black text-sky-400">₹${c.price}</span>
+                    </div>
+                    <h4 class="text-xs font-bold text-white truncate mt-1">${c.title}</h4>
+                    <p class="text-[10px] text-slate-400 line-clamp-2 mt-0.5">${c.desc}</p>
+                    <span class="text-[10px] text-emerald-400 font-bold inline-block mt-1.5">Includes CBT Palette Quizzes →</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (currentTab === 'ai') {
+        renderAIChatScreen(container, 'student');
+      } else if (currentTab === 'dashboard') {
+        container.innerHTML = `
+          <div class="p-4 space-y-4">
+            <h2 class="text-base font-bold text-white">Student Dashboard</h2>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-bold text-base">
+                ${currentUser.name[0]}
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-sm font-bold text-white truncate">${currentUser.name}</h3>
+                <p class="text-xs text-slate-400 truncate">${currentUser.email}</p>
+                <span class="text-[10px] text-emerald-400 font-semibold">Target: IIT-JEE 2026 (98.4%ile)</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl space-y-2">
+              <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">National CBT Rank Tracker</h3>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-400">Predicted JEE Percentile:</span>
+                <span class="text-base font-black text-emerald-400">98.45%ile</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-400">Tests Completed:</span>
+                <span class="text-white font-bold">14 / 20</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // --- TEACHER SCREENS ---
+    function renderTeacherScreen(container, nav) {
+      nav.innerHTML = `
+        <button onclick="setTab('dashboard')" class="flex flex-col items-center gap-1 ${currentTab === 'dashboard' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+          <i data-lucide="layout-grid" class="w-5 h-5"></i>
+          <span class="text-[10px]">Dashboard</span>
+        </button>
+        <button onclick="setTab('courses')" class="flex flex-col items-center gap-1 ${currentTab === 'courses' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+          <i data-lucide="layers" class="w-5 h-5"></i>
+          <span class="text-[10px]">My Courses</span>
+        </button>
+        <button onclick="setTab('ai')" class="flex flex-col items-center gap-1 relative ${currentTab === 'ai' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+          <div class="w-8 h-8 -mt-4 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/40">
+            <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[10px] mt-0.5">Teachers AI</span>
+        </button>
+        <button onclick="setTab('qna')" class="flex flex-col items-center gap-1 ${currentTab === 'qna' ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+          <i data-lucide="message-square" class="w-5 h-5"></i>
+          <span class="text-[10px]">Q&A Inbox</span>
+        </button>
+      `;
+
+      if (currentTab === 'dashboard') {
+        container.innerHTML = `
+          <div class="p-4 space-y-4">
+            <div class="flex items-center justify-between pt-1">
+              <div>
+                <p class="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">Mathnotes Teacher India</p>
+                <h2 class="text-lg font-extrabold text-white">Educator Operations</h2>
+              </div>
+              <button onclick="scheduleLiveDemo()" class="bg-red-500/20 text-red-300 border border-red-500/30 text-xs px-2.5 py-1 rounded-xl flex items-center gap-1 font-bold">
+                <i data-lucide="video" class="w-3.5 h-3.5"></i> Live Class
+              </button>
+            </div>
+
+            <!-- KPI Cards in INR -->
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <i data-lucide="users" class="w-4 h-4 text-sky-400 mb-2"></i>
+                <div class="text-xl font-black text-white">1,420</div>
+                <div class="text-[10px] text-slate-400">Total Enrolled</div>
+              </div>
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <i data-lucide="indian-rupee" class="w-4 h-4 text-emerald-400 mb-2"></i>
+                <div class="text-xl font-black text-white">₹1.84L</div>
+                <div class="text-[10px] text-slate-400">Net Payout (1% TDS)</div>
+              </div>
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400 mb-2"></i>
+                <div class="text-xl font-black text-white">4.94</div>
+                <div class="text-[10px] text-slate-400">Faculty Rating</div>
+              </div>
+              <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <i data-lucide="layers" class="w-4 h-4 text-purple-400 mb-2"></i>
+                <div class="text-xl font-black text-white">4</div>
+                <div class="text-[10px] text-slate-400">Active Batches</div>
+              </div>
+            </div>
+
+            <!-- Fast Action Banner -->
+            <div class="bg-emerald-950/30 border border-emerald-800/40 rounded-2xl p-3.5 space-y-2">
+              <h4 class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                <i data-lucide="bell" class="w-3.5 h-3.5"></i>
+                Broadcast Alert to Batch Students
+              </h4>
+              <p class="text-[11px] text-slate-300">
+                Push an instant announcement to all 1,420 enrolled students via Expo Push Notification.
+              </p>
+              <button onclick="broadcastPushDemo()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 px-3 rounded-xl">
+                Send Batch Push Notification
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (currentTab === 'courses') {
+        container.innerHTML = `
+          <div class="p-4 space-y-3">
+            <h2 class="text-base font-bold text-white">Course Management</h2>
+            <div class="space-y-3">
+              ${coursesData.map(c => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2">
+                  <div class="flex justify-between items-start">
+                    <h4 class="text-xs font-bold text-white flex-1 mr-2">${c.title}</h4>
+                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">Active</span>
+                  </div>
+                  <div class="flex gap-2 pt-1">
+                    <button onclick="setTab('ai')" class="bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 text-[10px] font-bold px-3 py-1.5 rounded-lg">AI Quiz Generator</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (currentTab === 'ai') {
+        renderAIChatScreen(container, 'teacher');
+      } else if (currentTab === 'qna') {
+        container.innerHTML = `
+          <div class="p-4 space-y-3">
+            <div class="flex justify-between items-center">
+              <h2 class="text-base font-bold text-white">Student Q&A Inbox</h2>
+              <span class="text-[10px] text-amber-400 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">1 Pending</span>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl space-y-2">
+              <div class="flex justify-between text-[11px]">
+                <span class="font-bold text-sky-400">Vikram • Calculus I</span>
+                <span class="text-slate-500">10m ago</span>
+              </div>
+              <p class="text-xs text-white font-semibold">"Why does the King's reflection identity evaluate to pi/4?"</p>
+              <div class="flex justify-end gap-2 pt-1">
+                <button onclick="replyDoubtDemo()" class="text-[10px] bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg shadow">
+                  Reply & Send Push Alert to Vikram
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // --- AI CHAT SCREEN (WITH SNAP & SOLVE CAMERA) ---
+    function renderAIChatScreen(container, mode) {
+      const isStudent = mode === 'student';
+      const messages = isStudent ? studentMessages : teacherMessages;
+      const title = isStudent ? 'MathNotes AI' : 'MathNotes Teachers AI';
+      const badge = isStudent ? '24/7 First-Principles Mentor' : 'Educator Curriculum Copilot';
+      const color = isStudent ? 'sky' : 'emerald';
+
+      const starters = isStudent ? [
+        'Evaluate $\\\\lim_{x \\to 0} \\\\frac{x - \\sin(x)}{x^3}$ with first principles (JEE)',
+        'Why does Gradient Descent in AI use the negative gradient $-\\\\nabla L(w)$?',
+        'Solve UPSC CSAT Number System: remainder of $2^{2026} \\pmod 7$'
+      ] : [
+        'Generate a 5-question NTA CBT Mock on Conics with +4/-1 marking',
+        'Design a 60-min active learning lesson: Teaching AI Calculus to high schoolers',
+        'Draft a UPSC CSAT Aptitude worksheet on Permutations'
+      ];
+
+      container.innerHTML = `
+        <div class="flex flex-col h-full">
+          <div class="p-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 shrink-0">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-${color}-500/20 border border-${color}-500/40 flex items-center justify-center text-sm">
+                ${isStudent ? '📐' : '🎓'}
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-white">${title}</h3>
+                <span class="text-[10px] text-${color}-400 font-medium">${badge}</span>
+              </div>
+            </div>
+            <button onclick="resetChat('${mode}')" class="text-slate-500 hover:text-slate-300 text-xs p-1">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="chatMessages" class="flex-1 overflow-y-auto p-3 space-y-3">
+            ${messages.map(m => `
+              <div class="flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}">
+                <div class="max-w-[85%] rounded-2xl p-3 text-xs leading-relaxed ${
+                  m.role === 'user'
+                    ? (isStudent ? 'bg-sky-600 text-white rounded-br-none' : 'bg-emerald-600 text-white rounded-br-none')
+                    : 'bg-slate-900 border border-slate-800 text-slate-100 rounded-bl-none shadow'
+                }">
+                  ${m.content.replace(/\\n/g, '<br>')}
+                </div>
+              </div>
+            `).join('')}
+
+            ${messages.length <= 1 ? `
+              <div class="pt-2">
+                <p class="text-[10px] font-bold text-slate-400 mb-1.5 uppercase">⚡ Try an inquiry:</p>
+                <div class="space-y-1.5">
+                  ${starters.map(s => `
+                    <button onclick="sendChatMessage('${mode}', '${s.replace(/'/g, "\\'")}')" class="w-full text-left bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-${color}-500 text-[11px] text-${color}-300 p-2 rounded-xl transition">
+                      ${s}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Input Bar with Snap & Solve Camera -->
+          <div class="p-2.5 border-t border-slate-800 bg-slate-900/90 flex items-center gap-2 shrink-0">
+            ${isStudent ? `
+              <button onclick="triggerSnapAndSolveDemo()" class="w-8 h-8 rounded-xl bg-sky-500/20 border border-sky-500/40 text-sky-400 flex items-center justify-center shrink-0 hover:bg-sky-500/30" title="Snap & Solve Camera">
+                <i data-lucide="camera" class="w-4 h-4"></i>
+              </button>
+            ` : ''}
+            <input
+              id="chatInput"
+              type="text"
+              placeholder="${isStudent ? 'Ask a doubt or tap 📸 to Snap & Solve...' : 'Ask for a lesson plan or quiz...'}"
+              class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-${color}-500"
+              onkeypress="if(event.key === 'Enter') sendChatMessage('${mode}')"
+            />
+            <button
+              onclick="sendChatMessage('${mode}')"
+              class="w-8 h-8 rounded-xl ${isStudent ? 'bg-sky-600' : 'bg-emerald-600'} flex items-center justify-center text-white shrink-0 hover:opacity-90"
+            >
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function resetChat(mode) {
+      if (mode === 'student') studentMessages = [studentMessages[0]];
+      else teacherMessages = [teacherMessages[0]];
+      renderScreen();
+    }
+
+    function triggerSnapAndSolveDemo() {
+      studentMessages.push({
+        role: 'user',
+        content: `📸 [Photo Captured: Definite Integral King's Property Problem]`
+      });
+      renderScreen();
+
+      setTimeout(() => {
+        studentMessages.push({
+          role: 'assistant',
+          content: `### 📸 Snap & Solve: Mathematical Derivation\n\n**Extracted Equation**: $$\\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)} \\, dx$$\n\n#### 1. Core Principle (King's Property)\n$$\\int_a^b f(x)dx = \\int_a^b f(a + b - x)dx$$\n\n#### 2. Step-by-Step Proof:\n* $I = \\int_0^{\\pi/2} \\frac{\\sin^3(x)}{\\sin^3(x) + \\cos^3(x)}dx$ --- (1)\n* Using $x \\mapsto \\pi/2 - x$: $I = \\int_0^{\\pi/2} \\frac{\\cos^3(x)}{\\cos^3(x) + \\sin^3(x)}dx$ --- (2)\n* Adding (1) + (2): $$2I = \\int_0^{\\pi/2} 1 \\, dx = [x]_0^{\\pi/2} = \\frac{\\pi}{2}$$\n* Therefore: $$\\mathbf{I = \\frac{\\pi}{4}}$$\n\n> ⚠️ **Exam Trap**: Avoid tedious trigonometric expansions like $\\sin^3(x) = \\frac{3\\sin(x) - \\sin(3x)}{4}$; always exploit reflection symmetries first!`
+        });
+        renderScreen();
+        const chatBox = document.getElementById('chatMessages');
+        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+    }
+
+    async function sendChatMessage(mode, textOverride) {
+      const input = document.getElementById('chatInput');
+      const text = textOverride || (input ? input.value.trim() : '');
+      if (!text) return;
+
+      const isStudent = mode === 'student';
+      const msgList = isStudent ? studentMessages : teacherMessages;
+
+      msgList.push({ role: 'user', content: text });
+      renderScreen();
+
+      setTimeout(() => {
+        let reply = '';
+        const lower = text.toLowerCase();
+
+        if (isStudent) {
+          if (lower.includes('gradient descent') || lower.includes('ai')) {
+            reply = `### Why Gradient Descent Powers Modern AI\nIn Neural Networks, loss $L(w)$ measures prediction error. Since the gradient $\\nabla L(w)$ points uphill (steepest ascent), taking a step in the opposite direction guarantees moving toward the local minimum:\n$$w_{t+1} = w_t - \\eta \\nabla L(w_t)$$\nNotice that the calculus in IIT-JEE is the exact mathematical heartbeat driving all artificial intelligence!`;
+          } else if (lower.includes('remainder') || lower.includes('csat')) {
+            reply = `### UPSC CSAT: Finding $2^{2026} \\pmod 7$\n1. Notice the cyclicity: $2^1 \\equiv 2$, $2^2 \\equiv 4$, $2^3 \\equiv 1 \\pmod 7$.\n2. Exponent: $2026 = 3 \\times 675 + 1$.\n3. Thus: $2^{2026} = (2^3)^{675} \\times 2^1 \\equiv (1)^{675} \\times 2 = \\mathbf{2} \\pmod 7$.`;
+          } else {
+            reply = `Great question! In **Mathnotes**, our goal is first-principles mastery. What theorem or problem would you like to derive next?`;
+          }
+        } else {
+          reply = `### Educator Module Generated\nI have generated the NTA-pattern mock questions with LaTeX formatting and $+4/-1$ rubrics. Ready to attach to your Tutor LMS course!`;
+        }
+
+        msgList.push({ role: 'assistant', content: reply });
+        renderScreen();
+        const chatBox = document.getElementById('chatMessages');
+        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+      }, 400);
+    }
+
+    // --- NTA CBT MODAL LOGIC ---
+    function openCbtModal() {
+      document.getElementById('cbtModal').classList.remove('hidden');
+      renderCbtQuestion();
+      if (!cbtInterval) {
+        cbtInterval = setInterval(() => {
+          cbtTimerSeconds--;
+          const m = Math.floor(cbtTimerSeconds / 60);
+          const s = cbtTimerSeconds % 60;
+          document.getElementById('cbtTimer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }, 1000);
+      }
+    }
+
+    function closeCbtModal() {
+      document.getElementById('cbtModal').classList.add('hidden');
+    }
+
+    function renderCbtQuestion() {
+      const q = cbtQuestions[cbtCurrentIndex];
+      document.getElementById('cbtQNum').innerText = `Question ${cbtCurrentIndex + 1} of ${cbtQuestions.length}`;
+      document.getElementById('cbtQDiff').innerText = q.difficulty;
+      document.getElementById('cbtQuestionText').innerText = q.question;
+      document.getElementById('cbtSectionTag').innerText = q.type === 'numerical' ? 'SECTION B: NAT' : 'SECTION A: MCQ';
+
+      const optContainer = document.getElementById('cbtOptionsContainer');
+      const userAns = cbtAnswers[q.id];
+
+      if (q.type === 'numerical') {
+        optContainer.innerHTML = `
+          <div class="space-y-2">
+            <p class="text-xs text-slate-400">Type your numerical value:</p>
+            <div class="bg-slate-950 p-3 rounded-xl border border-sky-500 font-mono text-center text-lg font-bold text-sky-400">
+              ${userAns || 'Enter number...'}
+            </div>
+            <div class="grid grid-cols-4 gap-2 pt-2 text-xs font-bold">
+              ${['1','2','3','4','5','6','7','8','9','.','0','-','CLEAR'].map(k => `
+                <button onclick="cbtKeypadPress('${k}')" class="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-lg text-white">${k}</button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        optContainer.innerHTML = q.options.map(opt => `
+          <label onclick="cbtSelectOption('${opt.id}')" class="flex items-center gap-3 p-3 rounded-xl border ${userAns === opt.id ? 'border-sky-500 bg-sky-500/10' : 'border-slate-800 bg-slate-950'} cursor-pointer hover:border-slate-700">
+            <span class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-white">${opt.id}</span>
+            <span class="text-xs text-slate-200">${opt.text}</span>
+          </label>
+        `).join('');
+      }
+
+      renderCbtPalette();
+      renderLaTeX(document.getElementById('cbtModal'));
+    }
+
+    function cbtSelectOption(optId) {
+      const q = cbtQuestions[cbtCurrentIndex];
+      cbtAnswers[q.id] = optId;
+      cbtStatuses[cbtCurrentIndex] = 'answered';
+      renderCbtQuestion();
+    }
+
+    function cbtKeypadPress(key) {
+      const q = cbtQuestions[cbtCurrentIndex];
+      let currentVal = cbtAnswers[q.id] || '';
+      if (key === 'CLEAR') {
+        delete cbtAnswers[q.id];
+        cbtStatuses[cbtCurrentIndex] = 'not_answered';
+      } else {
+        cbtAnswers[q.id] = currentVal + key;
+        cbtStatuses[cbtCurrentIndex] = 'answered';
+      }
+      renderCbtQuestion();
+    }
+
+    function cbtSaveAndNext() {
+      if (cbtCurrentIndex < cbtQuestions.length - 1) {
+        cbtCurrentIndex++;
+        if (!cbtStatuses[cbtCurrentIndex]) cbtStatuses[cbtCurrentIndex] = 'not_answered';
+        renderCbtQuestion();
+      }
+    }
+
+    function cbtMarkReview() {
+      cbtStatuses[cbtCurrentIndex] = 'marked_for_review';
+      cbtSaveAndNext();
+    }
+
+    function cbtClearResponse() {
+      const q = cbtQuestions[cbtCurrentIndex];
+      delete cbtAnswers[q.id];
+      cbtStatuses[cbtCurrentIndex] = 'not_answered';
+      renderCbtQuestion();
+    }
+
+    function renderCbtPalette() {
+      const grid = document.getElementById('cbtPaletteGrid');
+      grid.innerHTML = cbtQuestions.map((q, idx) => {
+        const st = cbtStatuses[idx];
+        let bg = 'bg-slate-700 text-slate-300';
+        if (st === 'answered') bg = 'bg-emerald-500 text-white';
+        else if (st === 'not_answered') bg = 'bg-red-500 text-white';
+        else if (st === 'marked_for_review') bg = 'bg-purple-500 text-white';
+
+        const isCurr = cbtCurrentIndex === idx;
+        return `
+          <button onclick="cbtJumpQuestion(${idx})" class="${bg} ${isCurr ? 'ring-2 ring-white font-black' : 'font-bold'} w-9 h-9 rounded-lg text-xs flex items-center justify-center">
+            ${idx + 1}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function cbtJumpQuestion(idx) {
+      cbtCurrentIndex = idx;
+      if (!cbtStatuses[idx]) cbtStatuses[idx] = 'not_answered';
+      renderCbtQuestion();
+    }
+
+    function cbtSubmitTest() {
+      let earned = 0;
+      let correct = 0;
+      cbtQuestions.forEach(q => {
+        const ans = cbtAnswers[q.id];
+        if (q.type === 'numerical') {
+          if (ans === '34') { earned += 4; correct++; }
+        } else {
+          const correctOpt = q.options.find(o => o.isCorrect)?.id;
+          if (ans === correctOpt) { earned += q.points; correct++; }
+          else if (ans) { earned -= 1; }
+        }
+      });
+
+      const percentile = (88 + (earned * 0.6)).toFixed(2);
+      alert(`🎉 Test Evaluated!\nScore: ${earned} / 18.5 pts\nPredicted All India Percentile: ${percentile}%ile\n\nPush alert dispatched to your Mentor!`);
+      closeCbtModal();
+      showPushToast('teacher', '📊 New CBT Mock Submission', `Vikram submitted JEE Mock with ${percentile}%ile!`);
+    }
+
+    // --- RAZORPAY CHECKOUT MODAL ---
+    function openCheckoutModal(courseId) {
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function processPaymentDemo() {
+      closeCheckoutModal();
+      showPushToast(
+        'student',
+        '🎉 Payment Verified & Enrolled!',
+        'Razorpay order verified. You have lifetime access to the masterclass!'
+      );
+    }
+
+    // --- TEACHER ACTIONS ---
+    function scheduleLiveDemo() {
+      showPushToast(
+        'student',
+        '🔴 Live Class Scheduled',
+        'Mentor Webxpro scheduled "JEE King\'s Property Live" for tomorrow 6:00 PM IST.'
+      );
+    }
+
+    function broadcastPushDemo() {
+      showPushToast(
+        'student',
+        '📢 Announcement from Faculty',
+        'Sunday National CBT Mock begins at 10 AM. Don\'t forget to revise Taylor series!'
+      );
+    }
+
+    function replyDoubtDemo() {
+      showPushToast(
+        'student',
+        '💬 Mentor Replied to Your Doubt!',
+        'Webxpro Digital replied to your Calculus question.'
+      );
+    }
+
+    // --- TOAST NOTIFICATIONS ---
+    function showPushToast(app, title, body) {
+      const toast = document.getElementById('pushToast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBody = document.getElementById('toastBody');
+      const toastAppTitle = document.getElementById('toastAppTitle');
+
+      toastAppTitle.innerText = app === 'student' ? 'MATHNOTES STUDENT' : 'MATHNOTES TEACHER';
+      toastTitle.innerText = title;
+      toastBody.innerText = body;
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 5500);
+    }
+
+    function toggleAuthModal() {
+      const m = document.getElementById('googleAuthModal');
+      m.classList.toggle('hidden');
+    }
+
+    function loginWithGoogle(name, email, role) {
+      currentUser.name = name;
+      currentUser.email = email;
+      currentUser.role = role;
+      document.getElementById('topUserName').innerText = name.split(' ')[0];
+      toggleAuthModal();
+      renderScreen();
+      showPushToast(currentApp, '✅ Google OAuth Authorized', `Logged in as ${email}`);
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>

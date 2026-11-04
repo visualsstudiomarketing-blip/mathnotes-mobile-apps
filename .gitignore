@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing and Temporary Artifacts
+*.apk
+*.zip
+apk_temp/
+apk_temp_teacher/
+downloaded_test.apk
+test.apk
+
+# Expo and React Native
+.expo/
+dist/
+web-build/
+*.tsbuildinfo
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local Environment
+.env*.local
+*.log

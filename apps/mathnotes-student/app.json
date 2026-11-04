@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Mathnotes",
+    "slug": "mathnotes",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "courses.mathnotes.student",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow Mathnotes to use your camera to snap math problems for instant step-by-step AI solutions.",
+        "NSPhotoLibraryUsageDescription": "Allow Mathnotes to access photos to upload handwritten math equations and homework doubts."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F172A"
+      },
+      "package": "courses.mathnotes.student",
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "POST_NOTIFICATIONS",
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "PLACEHOLDER_EAS_PROJECT_ID"
+      },
+      "apiBaseUrl": "https://mathnotes.courses/wp-json",
+      "supportEmail": "care@mathnotes.courses",
+      "privacyPolicyUrl": "https://mathnotes.courses/privacy-policy",
+      "termsUrl": "https://mathnotes.courses/terms"
+    }
+  }
+}
