@@ -39,6 +39,7 @@ jobs:
         working-directory: apps/mathnotes-student
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
+          GRADLE_OPTS: "-Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000"
         run: |
           npx expo prebuild --platform android --clean --no-install
           cd android
@@ -83,6 +84,7 @@ jobs:
         working-directory: apps/mathnotes-teacher
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
+          GRADLE_OPTS: "-Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000"
         run: |
           npx expo prebuild --platform android --clean --no-install
           cd android
